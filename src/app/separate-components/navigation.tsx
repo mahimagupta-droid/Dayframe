@@ -3,12 +3,10 @@ import Link from "next/link";
 import {
     SignedIn,
     SignedOut,
-    SignInButton,
-    SignOutButton,
-    SignUpButton,
+    UserButton
 } from "@clerk/nextjs";
 
-export default function Navigation() {
+export default async function Navigation() {
     return (
         <nav className="sticky top-0 z-50 h-16 w-full border-b bg-black text-white">
             <div className="mx-auto grid h-full max-w-7xl grid-cols-3 items-center px-10">
@@ -31,22 +29,11 @@ export default function Navigation() {
                 {/* Right: Auth Buttons */}
                 <div className="flex items-center justify-end gap-5">
                     <SignedOut>
-                        <SignInButton>
-                            <button className="rounded-lg px-4 p-5 text- font-medium transition hover:text-blue-500">
-                                Login
-                            </button>
-                        </SignInButton>
-
-                        <SignUpButton>
-                            <button className="rounded-lg px-4 p-5 text- font-medium transition hover:text-blue-500">
-                                Sign Up
-                            </button>
-                        </SignUpButton>
+                        <Link href="/login">Login</Link>
+                        <Link href="/sign-up">Signup</Link>
                     </SignedOut>
-
                     <SignedIn>
-                        <Link href="/user-profile" className="cursor-pointer">Profile</Link>
-                        <SignOutButton />
+                        <UserButton />
                     </SignedIn>
                 </div>
 

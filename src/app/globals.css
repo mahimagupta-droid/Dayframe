@@ -10,6 +10,13 @@ body {
   padding: 0;
 }
 
+:root {
+  --background: #1f271b;
+  --main-text: #f3fcf0;
+  --card: #ee4266;
+  --primary: #ffd23f;
+  --hover: #540d6e;
+}
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
