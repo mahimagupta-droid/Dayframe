@@ -3,7 +3,7 @@ import mongoose from "mongoose"
 type GoalsTypes = {
     id: string,
     title: string,
-    desciption: string,
+    description: string,
     dueDate: Date,
     category: "side-hustle" | "home" | "personal" | "school",
     progress: number,
@@ -32,7 +32,7 @@ const GoalsSchema = new mongoose.Schema<GoalsTypes>({
         type: Date,
         required: true
     },
-    desciption: {
+    description: {
         type: String,
         required: true
     },
