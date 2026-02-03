@@ -23,10 +23,8 @@ const UserSchema = new mongoose.Schema<UserType>(
       unique: true,
     },
     name: {
-      id: {
-        type: String,
-        required: true,
-      },
+      type: String,
+      required: true,
     },
     educationLevel: {
       type: String,
@@ -40,4 +38,4 @@ const UserSchema = new mongoose.Schema<UserType>(
   },
 );
 
-export const User = mongoose.model<UserType>("User", UserSchema) || mongoose.models.User;
+export const User = mongoose.models.User || mongoose.model<UserType>("User", UserSchema);

@@ -64,4 +64,4 @@ const GoalsSchema = new mongoose.Schema<GoalsTypes>({
     timestamps: true
 })
 
-export const Goals = mongoose.model<GoalsTypes>("Goals", GoalsSchema) || mongoose.models.Goals 
+export const Goals = mongoose.models.Goals || mongoose.model<GoalsTypes>("Goals", GoalsSchema);
