@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 // import mongoose from "mongoose"
-import { dbConnect } from "../../lib/dbConnections/dbConnect";
+import { dbConnect } from "@/lib/dbConnections/dbConnect";
 
 export async function GET() {
   try {
