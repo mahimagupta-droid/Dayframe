@@ -22,7 +22,7 @@ export default async function Navigation() {
 
                     <SignedOut>
                         <Link
-                            href="/dashboard"
+                            href="/profile-form"
                             className="inline-block ml-2 hover:bg-blue-600 hover:!p-2 hover:rounded transition-all"
                         >
                             Login

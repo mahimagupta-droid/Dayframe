@@ -1,41 +1,43 @@
 import mongoose from "mongoose";
 
-type UserType = {
-  id: string;
+export type UserType = {
+  clerkId: string;
   email: string;
-  name: string;
-  educationLevel: "high-school" | "undergradStudent" | "mastersStudent" | "other";
-  age: number;
+  firstName: string;
+  lastName: string;
+  photo?: string;
   createdAt: Date;
   updatedAt: Date;
 };
 
 const UserSchema = new mongoose.Schema<UserType>(
   {
-    id: {
+    clerkId: {
       type: String,
       required: true,
       unique: true,
+      index: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
     },
-    name: {
+    firstName: {
       type: String,
       required: true,
     },
-    educationLevel: {
+    lastName: {
       type: String,
       required: true,
-      enum: ["high-school", "undergradStudent", "mastersStudent", "other"],
-      default: "undergradStudent",
+    },
+    photo: {
+      type: String,
+      default: "",
     },
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true }
 );
 
-export const User = mongoose.models.User || mongoose.model<UserType>("User", UserSchema);
+export const User =
+  mongoose.models.User || mongoose.model<UserType>("User", UserSchema);
