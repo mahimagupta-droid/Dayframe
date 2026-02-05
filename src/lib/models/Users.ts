@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 export type UserType = {
   clerkId: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  photo?: string;
+  name: string;
+  educationLevel: "high-school" | "bachelors" | "masters";
+  age: number;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -23,17 +23,18 @@ const UserSchema = new mongoose.Schema<UserType>(
       required: true,
       unique: true,
     },
-    firstName: {
+    name: {
       type: String,
       required: true,
     },
-    lastName: {
+    educationLevel: {
       type: String,
+      enum: ["high-school", "bachelors", "masters"],
       required: true,
     },
-    photo: {
-      type: String,
-      default: "",
+    age: {
+      type: Number,
+      required: true,
     },
   },
   { timestamps: true }

@@ -29,7 +29,7 @@ export default function RootLayout({
         className={`${ubuntu.variable} bg-black text-white`}
       >
         <Navigation/>
-        <div className="mt-16"> 
+        <div className="pt-16"> 
           {children}
         </div>
       </body>
