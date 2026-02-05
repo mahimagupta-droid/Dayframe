@@ -1,6 +1,22 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { UserType } from "@/lib/models/Users";
+
 export default function ProfileForm() {
+    const [user, setUser] = useState<UserType | null>(null);
+    const [loading, setLoading] = useState(false);
+
+    // useEffect(() => {
+    //     try {
+    //         setLoading(true);
+    //     } catch (error) {
+            
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // }, []);
+
     return (
         <div>
             <h1 className="text-2xl justify-center text-center mb-5 font-lexend">Fill in the user details</h1>
@@ -18,6 +34,8 @@ export default function ProfileForm() {
                         name="email"
                         required
                         className="text-black text-[15px] p-0.5 rounded"
+                        value={user?.email || ""}
+                        onChange={(e) => setUser({...user, email: e.target.value } as UserType)}
                     />
                 </div>
                 <div>
@@ -33,6 +51,8 @@ export default function ProfileForm() {
                         name="name"
                         required
                         className="text-black text-[15px] p-0.5 rounded"
+                        value={user?.name || ""}
+                        onChange={(e) => setUser({...user, name: e.target.value } as UserType)}
                     />
                 </div>
                 <div>
@@ -48,6 +68,8 @@ export default function ProfileForm() {
                         required
                         className="text-black text-[15px] p-0.5 rounded"
                         defaultValue="selectOne" 
+                        value={user?.educationLevel || "selectOne"}
+                        onChange={(e) => setUser({...user, educationLevel: e.target.value} as UserType)}
                     >
                         <option value="selectOne" disabled>Select one</option>
                         <option
@@ -83,9 +105,14 @@ export default function ProfileForm() {
                         name="age"
                         required
                         className="text-black text-[15px] p-0.5 rounded"
+                        value={user?.age || ""}
+                        onChange={(e) => setUser({ ...user, age: Number(e.target.value) } as UserType)}
                     />
                 </div>
             </form>
+            <div className="text-center mt-4 bg-red-600 justify-center rounded text-white font-lexend w-32 mx-auto p-2 cursor-pointer hover:bg-green-600 transition-colors">
+                {loading ? "Submitting form" : "Submit"}
+            </div>
         </div>
     )
 }
