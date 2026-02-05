@@ -11,7 +11,7 @@ export default function ProfileForm() {
         e.preventDefault();
         try {
             setLoading(true);
-            await fetch("/api/tasks", {
+            await fetch("/api/user", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
