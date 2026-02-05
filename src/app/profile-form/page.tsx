@@ -7,20 +7,32 @@ export default function ProfileForm() {
     const [user, setUser] = useState<UserType | null>(null);
     const [loading, setLoading] = useState(false);
 
-    // useEffect(() => {
-    //     try {
-    //         setLoading(true);
-    //     } catch (error) {
-            
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // }, []);
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            setLoading(true);
+            await fetch("/api/tasks", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(user)
+            });
+        } catch (error) {
+            console.error("Error submitting form:", error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        
+    }, []);
 
     return (
         <div>
             <h1 className="text-2xl justify-center text-center mb-5 font-lexend">Fill in the user details</h1>
-            <form action="POST" className="border p-6 space-y-5">
+            <form action="POST" className="border p-6 space-y-5" onSubmit={handleSubmit}>
                 <div>
                     <label
                         htmlFor="email"
@@ -67,7 +79,7 @@ export default function ProfileForm() {
                         name="educationLevel"
                         required
                         className="text-black text-[15px] p-0.5 rounded"
-                        defaultValue="selectOne" 
+                        // defaultValue="selectOne" 
                         value={user?.educationLevel || "selectOne"}
                         onChange={(e) => setUser({...user, educationLevel: e.target.value} as UserType)}
                     >
@@ -109,10 +121,10 @@ export default function ProfileForm() {
                         onChange={(e) => setUser({ ...user, age: Number(e.target.value) } as UserType)}
                     />
                 </div>
-            </form>
-            <div className="text-center mt-4 bg-red-600 justify-center rounded text-white font-lexend w-32 mx-auto p-2 cursor-pointer hover:bg-green-600 transition-colors">
+                <button className="text-center mt-4 bg-red-600 justify-center flex rounded text-white font-lexend w-32 mx-auto p-2 cursor-pointer hover:bg-green-600 transition-colors" type="submit">
                 {loading ? "Submitting form" : "Submit"}
-            </div>
+            </button>
+            </form>
         </div>
     )
 }

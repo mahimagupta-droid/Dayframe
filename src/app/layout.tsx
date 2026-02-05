@@ -25,23 +25,40 @@ const lexend = Lexend({
   display: "swap",
 })
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+// export default function RootLayout({
+//   children,
+// }: Readonly<{
+//   children: React.ReactNode;
+// }>) {
+//   return (
+//     <ClerkProvider>
+//       <html lang="en">
+//       <body
+//         className={`${lexend.variable} bg-black text-white`}
+//       >
+//         <Navigation/>
+//         <div> 
+//           {children}
+//         </div>
+//       </body>
+//     </html>
+//     </ClerkProvider>
+//   );
+// }
+
+
+// Add to layout.tsx temporarily
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-      <body
-        className={`${lexend.variable} bg-black text-white`}
-      >
-        <Navigation/>
-        <div> 
-          {children}
-        </div>
-      </body>
-    </html>
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${lexend.variable} bg-black text-white`} suppressHydrationWarning>
+          <Navigation/>
+          <main className="pt-16 min-h-[calc(100vh-64px)]">
+            {children}
+          </main>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
