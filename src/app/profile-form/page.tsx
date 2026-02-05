@@ -1,32 +1,29 @@
 "use client";
 
-import { UserType } from "@/lib/models/Users";
-import { useState, useEffect } from "react";
-
 export default function ProfileForm() {
-    // const [user, setUser] = useState<UserType | null>(null);
     return (
-        
+        <div>
+            <h1 className="text-2xl justify-center text-center mb-5 font-lexend">Fill in the user details</h1>
             <form action="POST" className="border p-6 space-y-5">
-                <div className="p-4">
+                <div>
                     <label
                         htmlFor="email"
-                        className="m-4"
+                        className="mr-5"
                     >
-                        Email:
+                        Email
                     </label>
                     <input
                         type="email"
                         id="email"
                         name="email"
                         required
-                        className="border rounded-[6px]"
-                        // value={user?.email}
+                        className="text-black text-[15px] p-0.5 rounded"
                     />
                 </div>
                 <div>
                     <label
                         htmlFor="name"
+                        className="mr-3"
                     >
                         Name:
                     </label>
@@ -35,20 +32,24 @@ export default function ProfileForm() {
                         id="name"
                         name="name"
                         required
-                        className="border rounded-[6px]"
+                        className="text-black text-[15px] p-0.5 rounded"
                     />
                 </div>
                 <div>
                     <label
                         htmlFor="educationLevel"
+                        className="text-wrap mr-12" 
                     >
-                        Education Level:
+                        Education<br />Level
                     </label>
                     <select
                         id="educationLevel"
                         name="educationLevel"
                         required
+                        className="text-black text-[15px] p-0.5 rounded"
+                        defaultValue="selectOne" 
                     >
+                        <option value="selectOne" disabled>Select one</option>
                         <option
                             value="high-school"
                             className="text-black"
@@ -72,6 +73,7 @@ export default function ProfileForm() {
                 <div>
                     <label
                         htmlFor="age"
+                        className="mr-7"
                     >
                         Age:
                     </label>
@@ -80,9 +82,10 @@ export default function ProfileForm() {
                         id="age"
                         name="age"
                         required
+                        className="text-black text-[15px] p-0.5 rounded"
                     />
                 </div>
             </form>
-
+        </div>
     )
 }

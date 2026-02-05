@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import {ClerkProvider} from "@clerk/nextjs"
-import { Ubuntu } from "next/font/google";
+import { Lexend } from "next/font/google";
 import Navigation from "./separate-components/navigation";
 
 export const metadata: Metadata = {
@@ -9,13 +9,21 @@ export const metadata: Metadata = {
   description: "Student Productivity and Life Goals Manager",
 };
 
-const ubuntu = Ubuntu({
+// const ubuntu = Ubuntu({
+//   subsets: ["latin"],
+//   weight: ["300", "400", "500", "700"], // ALL available weights
+//   style: ["normal", "italic"],
+//   variable: "--font-ubuntu",
+//   display: "swap",
+// });
+
+const lexend = Lexend({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "700"], // ALL available weights
-  style: ["normal", "italic"],
-  variable: "--font-ubuntu",
+  weight: ["300", "400", "500", "600", "700", "800", "900"], // ALL available weights
+  style: ["normal"],
+  variable: "--font-lexend",
   display: "swap",
-});
+})
 
 export default function RootLayout({
   children,
@@ -26,10 +34,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
       <body
-        className={`${ubuntu.variable} bg-black text-white`}
+        className={`${lexend.variable} bg-black text-white`}
       >
         <Navigation/>
-        <div className="pt-16"> 
+        <div> 
           {children}
         </div>
       </body>
