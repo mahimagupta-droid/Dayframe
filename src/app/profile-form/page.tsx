@@ -1,12 +1,31 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
 import { useState, useEffect } from "react";
 import { UserType } from "@/lib/models/Users";
-
+import toast from "react-hot-toast";
 export default function ProfileForm() {
     const [user, setUser] = useState<UserType | null>(null);
     const [loading, setLoading] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [formData, setFormData] = useState<UserType | null>(null);
 
+    const fetchUsers = async () => {
+        try {
+            setLoading(true)
+            const response = await fetch("api/user")
+            if (response.ok) {
+                const data: UserType = await response.json();
+                setUser(data);
+            } else {
+                setUser(null);
+            }
+        } catch (error: any) {
+            setUser(null);
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
@@ -18,16 +37,38 @@ export default function ProfileForm() {
                 },
                 body: JSON.stringify(user)
             });
+            toast.success("User profile created successfully!")
         } catch (error) {
             console.error("Error submitting form:", error);
+            toast.error("Error creating user profile")
         } finally {
             setLoading(false);
         }
     }
 
     useEffect(() => {
-        
+        fetchUsers();
     }, []);
+
+    if (loading) {
+        return 
+            <div className="flex items-center justify-center h-screen">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+            </div>
+    }
+
+    if(user && !isEditing){
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="border p-3">
+                    <p>Name: {user.name}</p>
+                    <p>Educational Level: {user.educationLevel}</p>
+                    <p>Email: {user.email}</p>
+                    <p>Age: {user.age}</p>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div>
@@ -46,8 +87,8 @@ export default function ProfileForm() {
                         name="email"
                         required
                         className="text-black text-[15px] p-0.5 rounded"
-                        value={user?.email || ""}
-                        onChange={(e) => setUser({...user, email: e.target.value } as UserType)}
+                        value={formData?.email || ""}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value } as UserType)}
                     />
                 </div>
                 <div>
@@ -63,14 +104,14 @@ export default function ProfileForm() {
                         name="name"
                         required
                         className="text-black text-[15px] p-0.5 rounded"
-                        value={user?.name || ""}
-                        onChange={(e) => setUser({...user, name: e.target.value } as UserType)}
+                        value={formData?.name || ""}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value } as UserType)}
                     />
                 </div>
                 <div>
                     <label
                         htmlFor="educationLevel"
-                        className="text-wrap mr-12" 
+                        className="text-wrap mr-12"
                     >
                         Education<br />Level
                     </label>
@@ -80,8 +121,8 @@ export default function ProfileForm() {
                         required
                         className="text-black text-[15px] p-0.5 rounded"
                         // defaultValue="selectOne" 
-                        value={user?.educationLevel || "selectOne"}
-                        onChange={(e) => setUser({...user, educationLevel: e.target.value} as UserType)}
+                        value={formData?.educationLevel || "selectOne"}
+                        onChange={(e) => setFormData({ ...formData, educationLevel: e.target.value } as UserType)}
                     >
                         <option value="selectOne" disabled>Select one</option>
                         <option
@@ -117,13 +158,13 @@ export default function ProfileForm() {
                         name="age"
                         required
                         className="text-black text-[15px] p-0.5 rounded"
-                        value={user?.age || ""}
-                        onChange={(e) => setUser({ ...user, age: Number(e.target.value) } as UserType)}
+                        value={formData?.age || ""}
+                        onChange={(e) => setFormData({ ...formData, age: Number(e.target.value) } as UserType)}
                     />
                 </div>
                 <button className="text-center mt-4 bg-red-600 justify-center flex rounded text-white font-lexend w-32 mx-auto p-2 cursor-pointer hover:bg-green-600 transition-colors" type="submit">
-                {loading ? "Submitting form" : "Submit"}
-            </button>
+                    {loading ? "Submitting form" : "Submit"}
+                </button>
             </form>
         </div>
     )
