@@ -29,21 +29,3 @@ export async function POST(request: NextRequest) {
     }
 }
 
-export async function GET(request: NextRequest){
-    try {
-        const body = await request.json();
-        const {userId} = body;
-        await dbConnect();
-        const response = await User.findOne({clerkId: userId});
-        return NextResponse.json({
-            success: true,
-            user: response
-        })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-        return NextResponse.json(
-            {message: error.message},
-            {status: 500}
-        )
-    }
-}

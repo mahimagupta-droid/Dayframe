@@ -9,33 +9,16 @@ export default function ProfileForm() {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState<UserType | null>(null);
 
-    const fetchUsers = async () => {
-        try {
-            setLoading(true)
-            const response = await fetch("api/user")
-            if (response.ok) {
-                const data: UserType = await response.json();
-                setUser(data);
-            } else {
-                setUser(null);
-            }
-        } catch (error: any) {
-            setUser(null);
-            toast.error(error.message);
-        } finally {
-            setLoading(false);
-        }
-    }
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             setLoading(true);
-            await fetch("/api/user", {
+            await fetch("/api/posts", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(user)
+                body: JSON.stringify(formData)
             });
             toast.success("User profile created successfully!")
         } catch (error) {
@@ -44,30 +27,6 @@ export default function ProfileForm() {
         } finally {
             setLoading(false);
         }
-    }
-
-    useEffect(() => {
-        fetchUsers();
-    }, []);
-
-    if (loading) {
-        return 
-            <div className="flex items-center justify-center h-screen">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
-            </div>
-    }
-
-    if(user && !isEditing){
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="border p-3">
-                    <p>Name: {user.name}</p>
-                    <p>Educational Level: {user.educationLevel}</p>
-                    <p>Email: {user.email}</p>
-                    <p>Age: {user.age}</p>
-                </div>
-            </div>
-        )
     }
 
     return (
