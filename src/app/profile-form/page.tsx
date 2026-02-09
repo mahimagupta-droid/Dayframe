@@ -226,7 +226,8 @@ export default function ProfileForm() {
 
     if (user != null && !loading) {
         return (
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col justify-center items-center min-h-screen">
+                
                 <div className="space-y-2 p-5 border rounded">
                     <p>User Profile</p>
                     <p>Name: {user.name}</p>
