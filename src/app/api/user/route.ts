@@ -56,3 +56,31 @@ export async function GET() {
         )
     }
 } 
+
+export async function DELETE(request: NextRequest) {
+    try {
+        const {userId} = await auth();
+        if(!userId) return NextResponse.json(
+            {message: "Unauthorized"},
+            {status: 401}
+        )
+        await dbConnect();
+        const response = await User.deleteOne({clerkId: userId});
+        if(response){
+            return NextResponse.json({
+                success: true,
+                message: "User deleted successfully"
+            })
+        } else {
+            return NextResponse.json({
+                success: false,
+                status: 404
+            })
+        }        
+    } catch (error: any) {
+        return NextResponse.json(
+            {message: error.message},
+            {status: 500}
+        )
+    }
+}

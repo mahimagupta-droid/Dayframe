@@ -29,6 +29,17 @@ export default function ProfileForm() {
         }
     }
 
+    const handleDelete = async () => {
+        const response = await fetch("/api/user", {
+            method: "DELETE"
+        })
+        if (response.ok) {
+            toast.success("User profile deleted successfully!")
+        } else {
+            toast.error("Error deleting user profile")
+        }
+    }
+
     const handleFetch = async () => {
         try {
             setLoading(true);
@@ -68,13 +79,25 @@ export default function ProfileForm() {
 
     if (user != null && !loading) {
         return (
-            <div className="p-5 border rounded">
-                <div className="space-y-2">
+            <div className="flex flex-col min-h-screen">
+                <div className="space-y-2 p-5 border rounded">
                     <p>User Profile</p>
                     <p>Name: {user.name}</p>
                     <p>Email: {user.email}</p>
                     <p>Age: {user.age}</p>
                     <p>Education Level: {user.educationLevel}</p>
+                </div>
+                <div className="flex items-center justify-center">
+                    <button
+                        className="bg-red-600 hover:bg-green-500 transition p-2 rounded mr-4 mt-5"
+                    >
+                        Edit
+                    </button>
+                    <button
+                        className="bg-red-600 hover:bg-green-500 transition p-2 rounded mt-5" onClick={handleDelete}
+                    >
+                        Delete
+                    </button>
                 </div>
             </div>
         )
