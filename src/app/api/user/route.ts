@@ -85,3 +85,32 @@ export async function DELETE(request: NextRequest) {
     }
 }
 
+export async function PUT(request: NextRequest){
+    try {
+        const reqBody = await request.json();
+        const {email, name, educationLevel, age} = reqBody;
+        const {userId} = await auth();
+        await dbConnect();
+        const updatedUser = await User.findOneAndUpdate(
+            {clerkId: userId},
+            {email, name, educationLevel, age},
+            {new: true}
+        );
+        if(updatedUser){
+            return NextResponse.json({
+                success: true,
+                user: updatedUser
+            })
+        } else {
+            return NextResponse.json({
+                success: false,
+                status: 404
+            })
+        }
+    } catch (error: any) {
+        return NextResponse.json(
+            {message: error.message},
+            {status: 500}
+        )
+    }
+}
