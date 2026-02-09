@@ -218,7 +218,7 @@ export default function ProfileForm() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-screen">
+            <div className="flex items-center justify-center h-full">
                 <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
             </div>
         )
@@ -226,7 +226,7 @@ export default function ProfileForm() {
 
     if (user != null && !loading) {
         return (
-            <div className="flex flex-col min-h-screen">
+            <div className="flex flex-col h-full">
                 <div className="space-y-2 p-5 border rounded">
                     <p>User Profile</p>
                     <p>Name: {user.name}</p>
@@ -252,7 +252,7 @@ export default function ProfileForm() {
     }
 
     return (
-        <div>
+        <div className="min-h-screen flex items-center justify-center flex-col">
             <h1 className="text-2xl justify-center text-center mb-5 font-lexend">Fill in the user details</h1>
             <form action="POST" className="border p-6 space-y-5" onSubmit={handleSubmit}>
                 <div>

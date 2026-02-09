@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="en" suppressHydrationWarning>
         <body className={`${lexend.variable} bg-black text-white`} suppressHydrationWarning>
           <Navigation/>
-          <main className="pt-16 min-h-[calc(100vh-64px)]">
+          <main className="min-h-[calc(100vh-64px)]">
             {children}
             <Toaster position="bottom-left"/>
           </main>
