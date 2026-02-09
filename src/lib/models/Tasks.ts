@@ -4,12 +4,12 @@ type TasksTypes = {
     id: string,
     title: string,
     deadline: Date,
-    priority: "Important" | "Can be kept for later" | "Moderately Important",
-    difficulty: "very" | "manageable" | "easy",
-    timeRequired: "lengthy, requires a lot of time" | "slightly lengthy, can be managed within a moderate span" | "short, can be done within a short span",
+    priority: "high" | "medium" | "low",
+    difficulty: "hard" | "medium" | "easy",
+    timeRequired: "long" | "medium" | "short",
     description: string,
     category: "side-hustle" | "home" | "personal" | "school",
-    status: "to-do" | "in progress" | "completed",
+    status: "todo" | "in-progress" | "completed",
     createdAt: Date,
     updatedAt: Date,
     completedAt?: Date
@@ -39,23 +39,23 @@ const TasksSchema = new mongoose.Schema<TasksTypes>({
         default: "school"
     },
     priority: {
-        enum: ["Important", "Can be kept for later", "Moderately Important"],
+        enum: ["high", "medium", "low",],
         type: String,
-        default: "Important"
+        default: "medium"
     },
     difficulty: {
-        enum: ["very", "manageable", "easy"],
+        enum: ["hard", "medium" , "easy",],
         type: String,
-        default: "manageable"
+        default: "medium"
     },
     timeRequired: {
-        enum: ["lengthy, requires a lot of time", "slightly lengthy, can be managed within a moderate span", "short, can be done within a short span"],
+        enum: ["long", "medium", "short"],
         type: String,
-        default: "slightly lengthy, can be managed within a moderate span"
+        default: "medium",
     },
     status: {
-        enum: ["to-do", "in progress", "completed"],
-        default: "to-do",
+        enum: ["todo", "in-progress", "completed"],
+        default: "todo",
         type: String
     }
 },
