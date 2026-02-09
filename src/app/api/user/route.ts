@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { dbConnect } from "@/lib/dbConnections/dbConnect";
 import { User } from "@/lib/models/Users";
 import { auth } from "@clerk/nextjs/server";
@@ -20,7 +21,6 @@ export async function POST(request: NextRequest) {
             success: true,
             user: newUser
         })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         return NextResponse.json(
             {message: error.message},
@@ -29,3 +29,30 @@ export async function POST(request: NextRequest) {
     }
 }
 
+export async function GET() {
+    try {
+        const {userId} = await auth();
+        if(!userId) return NextResponse.json(
+            {message: "Unauthorized"},
+            {status: 401}
+        )
+        await dbConnect();
+        const user = await User.findOne({clerkId: userId});
+        if(user){
+            return NextResponse.json({
+                success: true,
+                user: user
+            })
+        } else {
+            return NextResponse.json({
+                success: false,
+                status: 404
+            })
+        }
+    } catch (error: any) {
+        return NextResponse.json(
+            {message: error.message},
+            {status: 500}
+        )
+    }
+} 

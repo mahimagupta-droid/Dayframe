@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { UserType } from "@/lib/models/Users";
 import toast from "react-hot-toast";
 export default function ProfileForm() {
@@ -9,11 +9,11 @@ export default function ProfileForm() {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState<UserType | null>(null);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault();
         try {
             setLoading(true);
-            await fetch("/api/posts", {
+            await fetch("/api/user", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -28,6 +28,58 @@ export default function ProfileForm() {
             setLoading(false);
         }
     }
+
+    const handleFetch = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch("/api/user")
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.user) {
+                    setUser(data.user);
+                    console.log("successful data fetch", data.user);
+                } else {
+                    console.error("Data fetch unsuccessful or user not found:", data);
+                    setUser(null);
+                }
+            } else {
+                setUser(null);
+            }
+        } catch (error: any) {
+            console.log(error.message)
+            toast.error(error.message)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    console.log((user))
+    useEffect(() => {
+        handleFetch();
+    }, [])
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+            </div>
+        )
+    }
+
+    if (user != null && !loading) {
+        return (
+            <div className="p-5 border rounded">
+                <div className="space-y-2">
+                    <p>User Profile</p>
+                    <p>Name: {user.name}</p>
+                    <p>Email: {user.email}</p>
+                    <p>Age: {user.age}</p>
+                    <p>Education Level: {user.educationLevel}</p>
+                </div>
+            </div>
+        )
+    }
+
 
     return (
         <div>
