@@ -30,13 +30,21 @@ export default function ProfileForm() {
     }
 
     const handleDelete = async () => {
-        const response = await fetch("/api/user", {
-            method: "DELETE"
-        })
-        if (response.ok) {
-            toast.success("User profile deleted successfully!")
-        } else {
-            toast.error("Error deleting user profile")
+        try {
+            setLoading(true);
+            const response = await fetch("/api/user", {
+                method: "DELETE"
+            })
+            if (response.ok) {
+                toast.success("User profile deleted successfully!")
+            } else {
+                toast.error("Error deleting user profile")
+            }
+        } catch (error: any) {
+            console.log(error.message)
+            toast.error(error.message)
+        } finally {
+            setLoading(false)
         }
     }
 
