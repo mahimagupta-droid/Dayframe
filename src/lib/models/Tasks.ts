@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 
-type TasksTypes = {
-    id: string,
+export type TasksTypes = {
+    clerkId: string,
     title: string,
     deadline: Date,
     priority: "high" | "medium" | "low",
@@ -16,10 +16,10 @@ type TasksTypes = {
 }
 
 const TasksSchema = new mongoose.Schema<TasksTypes>({
-    id: {
+    clerkId: {
         type: String,
         required: true,
-        unique: true
+        unique: false
     },
     title: {
         type: String,
