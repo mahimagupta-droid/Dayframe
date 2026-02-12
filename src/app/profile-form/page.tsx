@@ -20,6 +20,8 @@ export default function ProfileForm() {
                 },
                 body: JSON.stringify(formData)
             });
+
+            
             toast.success("User profile created successfully!")
             handleFetch();
         } catch (error) {
