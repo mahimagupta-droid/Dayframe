@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { GoalsTypes } from "@/lib/models/Goals";
@@ -8,12 +9,35 @@ export default function Goals() {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<Partial<GoalsTypes>>({});
 
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        try {
+            setLoading(true);
+            const response = await fetch("/api/goals",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            })
+            if(response.ok){
+                toast.success("Goal added successfully!");
+                setLoading(false);
+            }
+        } catch (error: any) {
+            setLoading(false);
+            toast.error(error.message)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen text-white p-4 mt-8">
+        <div className="flex flex-col items-center justify-center min-h-screen text-white p-4 mt-4">
             <div className="text-3xl mb-3 font-lexend">Enter Goals</div>
             <form
-                className="border rounded p-6 space-y-4 w-full max-w-lg"
+                className="border rounded p-6 space-y-4 w-full max-w-lg bg-zinc-900"
+                onSubmit={handleSubmit}
             >
                 <div className="flex items-center justify-between">
                     <label htmlFor="title">Title</label>

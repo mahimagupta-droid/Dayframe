@@ -7,7 +7,7 @@ export type GoalsTypes = {
   dueDate: Date;
   category: "side-hustle" | "home" | "personal" | "school";
   progress: number;
-  status: "started" | "not-started" | "completed";
+  status: "todo" | "in-progress" | "completed";
   milestones: Array<{
     title: string;
     completed: boolean;
@@ -32,8 +32,8 @@ const GoalsSchema = new mongoose.Schema<GoalsTypes>(
     progress: { type: Number, default: 0, min: 0, max: 100 },
     status: {
       type: String,
-      enum: ["started", "not-started", "completed"],
-      default: "not-started",
+      enum: ["todo", "in-progress", "completed"],
+      default: "todo",
     },
     milestones: [
       {
