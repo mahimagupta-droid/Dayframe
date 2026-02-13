@@ -1,13 +1,13 @@
 "use client";
 
 import { TasksTypes } from "@/lib/models/Tasks";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 export default function Tasks() {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<Partial<TasksTypes>>({});
-    // const [goalsData, setGoalsData] = useState<Partial<
+    const [tasksData, setTasksData] = useState<Partial<TasksTypes | null>>(null)
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -36,6 +36,52 @@ export default function Tasks() {
             setLoading(false);
         }
     }
+    const handleFetch = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch("/api/goals");
+            if (response.ok) {
+                const body = await response.json();
+                if (body.success && body.goals) {
+                    setTasksData(body.goals);
+                    toast.success("Data fetch request successful!")
+                } else {
+                    setLoading(false);
+                    setTasksData(null);
+                    console.log("unsuccessful data fetch")
+                }
+            }
+        } catch (error: any) {
+            setLoading(false);
+            setTasksData(null);
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+    useEffect(() => {
+        handleFetch();
+    }, [])
+
+    if (loading) {
+        return (
+            <div className="flex flex-col justify-center items-center min-h-screen p-4">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+            </div>
+        )
+    }
+
+    if (tasksData != null && !loading) {
+        return (
+            <div className="text-white text-2xl flex flex-col justify-center items-center border-white">
+                <p>{tasksData.title}</p>
+                <p>{tasksData.description}</p>
+                <p>{tasksData.deadline instanceof Date ? tasksData.deadline.toISOString().split('T')[0] : tasksData.deadline}</p>
+                <p>{tasksData.category}</p>
+            </div>
+        )
+    }
+
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen text-white">
@@ -117,7 +163,7 @@ export default function Tasks() {
                         <option value="short">Short</option>
                     </select>
                 </div>
-                <div className="p-3"> 
+                <div className="p-3">
                     <label htmlFor="description" className="mr-4">Description</label>
                     <textarea
                         name="description"
@@ -128,7 +174,7 @@ export default function Tasks() {
                         value={formData.description || ''}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     />
-                </div>                
+                </div>
                 <div className="p-3">
                     <label htmlFor="category" className="mr-5">Category</label>
                     <select

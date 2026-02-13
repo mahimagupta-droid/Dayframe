@@ -51,3 +51,29 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const { userId } = await auth();
+    if (!userId)
+      return NextResponse.json(
+        { message: "User unauthorised" },
+        { status: 401 },
+      );
+    await dbConnect();
+    const reqBody = await Tasks.findOne({ clerkId: userId });
+    if (reqBody) {
+      return NextResponse.json({
+        success: true,
+        goals: reqBody,
+      });
+    } else {
+      return NextResponse.json({
+        success: false,
+        status: 404,
+      });
+    }
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
