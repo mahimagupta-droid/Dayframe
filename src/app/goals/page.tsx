@@ -2,25 +2,25 @@
 "use client";
 
 import { GoalsTypes } from "@/lib/models/Goals";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function Goals() {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<Partial<GoalsTypes>>({});
-
+    const [goals, setGoals] = useState<Partial<GoalsTypes> | null>(null);
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
             setLoading(true);
-            const response = await fetch("/api/goals",{
+            const response = await fetch("/api/goals", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(formData)
             })
-            if(response.ok){
+            if (response.ok) {
                 toast.success("Goal added successfully!");
                 setLoading(false);
             }
@@ -31,7 +31,53 @@ export default function Goals() {
             setLoading(false)
         }
     }
+    const handleFetch = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch("/api/goals");
+            if(response.ok){
+                const body = await response.json();   
+                if(body.success && body.goals){
+                    setGoals(body.goals);
+                    toast.success("Data fetch request successful!")    
+                } else {
+                    setLoading(false);
+                    setGoals(null);
+                    console.log("unsuccessful data fetch")
+                }
+            }
+        } catch (error: any) {
+            setLoading(false);
+            setGoals(null);
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+    useEffect(() => {
+        handleFetch();
+    }, [])
+    // console.log(goals)
 
+if (loading) {
+        return (
+            <div className="flex flex-col justify-center items-center min-h-screen p-4">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+            </div>
+        )
+    }
+
+    if(goals!=null && !loading){
+        return (
+            <div className="text-white text-2xl flex flex-col justify-center items-center border-white">
+                <p>{goals.title}</p>
+                <p>{goals.description}</p>
+                <p>{goals.dueDate instanceof Date ? goals.dueDate.toISOString().split('T')[0] : goals.dueDate}</p>
+                <p>{goals.category}</p>
+            </div>
+        )
+    }
+  
     return (
         <div className="flex flex-col items-center justify-center min-h-screen text-white p-4 mt-4">
             <div className="text-3xl mb-3 font-lexend">Enter Goals</div>
