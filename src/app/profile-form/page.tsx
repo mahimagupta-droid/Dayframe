@@ -256,7 +256,7 @@ export default function ProfileForm() {
         <div className="flex items-center justify-center min-h-screen p-4">
             <div className="w-full max-w-md">
                 <h1 className="text-3xl text-center mb-5 font-lexend">Fill in the user details</h1>
-                <form action="POST" className="border p-6 space-y-5 bg-cyan-800 rounded" onSubmit={handleSubmit}>
+                <form action="POST" className="border p-6 space-y-5 bg-zinc-900 rounded" onSubmit={handleSubmit}>
                     <div className="flex items-center justify-between">
                         <label
                             htmlFor="email"
