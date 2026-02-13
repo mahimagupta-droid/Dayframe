@@ -161,7 +161,7 @@ if (loading) {
                         className="text-black text-[13px] p-0.5 rounded bg-white w-56"
                         required
                         value={formData.status || ''}
-                        onChange={(e) => setFormData({ ...formData, status: e.target.value as "started" | "not-started" | "completed" })}
+                        onChange={(e) => setFormData({ ...formData, status: e.target.value as "todo" | "in-progress" | "completed" })}
                     >
                         <option value="">Choose one</option>
                         <option value="todo">Todo</option>
