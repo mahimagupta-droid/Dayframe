@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 export default function Tasks() {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<Partial<TasksTypes>>({});
+    // const [goalsData, setGoalsData] = useState<Partial<
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -43,7 +44,7 @@ export default function Tasks() {
                 onSubmit={handleSubmit}
                 className="border rounded p-5 space-y-3"
             >
-                <div>
+                <div className="p-3">
                     <label htmlFor="title" className="mr-12">Title</label>
                     <input
                         type="text"
@@ -56,8 +57,7 @@ export default function Tasks() {
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     />
                 </div>
-
-                <div>
+                <div className="p-3">
                     <label htmlFor="deadline" className="mr-4">Deadline</label>
                     <input
                         type="date"
@@ -69,8 +69,7 @@ export default function Tasks() {
                         onChange={(e) => setFormData({ ...formData, deadline: new Date(e.target.value) })}
                     />
                 </div>
-
-                <div>
+                <div className="p-3">
                     <label htmlFor="priority" className="mr-6">Priority</label>
                     <select
                         name="priority"
@@ -86,8 +85,7 @@ export default function Tasks() {
                         <option value="low">Low</option>
                     </select>
                 </div>
-
-                <div>
+                <div className="p-3">
                     <label htmlFor="difficulty" className="mr-4">Difficulty</label>
                     <select
                         name="difficulty"
@@ -103,8 +101,7 @@ export default function Tasks() {
                         <option value="easy">Easy</option>
                     </select>
                 </div>
-
-                <div>
+                <div className="p-3">
                     <label htmlFor="timeRequired" className="mr-4">Time <br /> Required</label>
                     <select
                         name="timeRequired"
@@ -120,8 +117,7 @@ export default function Tasks() {
                         <option value="short">Short</option>
                     </select>
                 </div>
-
-                <div>
+                <div className="p-3"> 
                     <label htmlFor="description" className="mr-4">Description</label>
                     <textarea
                         name="description"
@@ -132,9 +128,8 @@ export default function Tasks() {
                         value={formData.description || ''}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     />
-                </div>
-
-                <div>
+                </div>                
+                <div className="p-3">
                     <label htmlFor="category" className="mr-5">Category</label>
                     <select
                         name="category"
@@ -151,8 +146,7 @@ export default function Tasks() {
                         <option value="school">School</option>
                     </select>
                 </div>
-
-                <div>
+                <div className="p-3">
                     <label htmlFor="status" className="mr-10">Status</label>
                     <select
                         name="status"
