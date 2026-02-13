@@ -10,75 +10,54 @@ export default function Goals() {
 
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen text-white">
-            <div className="text-2xl mb-5">Enter Goals</div>
+        <div className="flex flex-col items-center justify-center min-h-screen text-white p-4 mt-8">
+            <div className="text-3xl mb-3 font-lexend">Enter Goals</div>
             <form
-                className="border rounded p-5 space-y-3"
+                className="border rounded p-6 space-y-4 w-full max-w-lg"
             >
-                <div>
-                    <label htmlFor="title" className="mr-12">Title</label>
+                <div className="flex items-center justify-between">
+                    <label htmlFor="title">Title</label>
                     <input
                         type="text"
                         id="title"
                         name="title"
                         required
-                        className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                        className="text-black text-[13px] p-0.5 rounded bg-white w-56"
                         placeholder="eg. complete assignments"
                         value={formData.title || ''}
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     />
                 </div>
-                <div>
-                    <label htmlFor="difficulty" className="mr-4">Difficulty</label>
-                    <select
-                        name="difficulty"
-                        id="difficulty"
-                        className="text-black text-[15px] p-0.5 rounded bg-white w-40"
-                        required
-                        
-                    >
-                        <option value="">Choose one</option>
-                        <option value="hard">Hard</option>
-                        <option value="medium">Medium</option>
-                        <option value="easy">Easy</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label htmlFor="timeRequired" className="mr-4">Time <br /> Required</label>
-                    <select
-                        name="timeRequired"
-                        id="timeRequired"
-                        className="text-black text-[15px] p-0.5 rounded bg-white w-40"
-                        required
-                        
-                    >
-                        <option value="">Choose one</option>
-                        <option value="long">Long</option>
-                        <option value="medium">Medium</option>
-                        <option value="short">Short</option>
-                    </select>
-                </div>
- 
-                <div>
-                    <label htmlFor="description" className="mr-4">Description</label>
+                <div className="flex justify-between">
+                    <label htmlFor="description">Description</label>
                     <textarea
                         name="description"
                         id="description"
-                        className="rounded min-h-6 text-black w-36 text-[13px]"
+                        className="rounded min-h-20 text-black w-56 text-[13px] p-1"
                         placeholder="physics, maths"
                         required
                         value={formData.description || ''}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     />
                 </div>
-
-                <div>
-                    <label htmlFor="category" className="mr-5">Category</label>
+                <div className="flex items-center justify-between">
+                    <label htmlFor="dueDate">Due Date</label>
+                    <input
+                        type="date"
+                        name="dueDate"
+                        id="dueDate"
+                        className="text-black text-[13px] p-0.5 rounded bg-white w-56"
+                        required
+                        value={formData?.dueDate instanceof Date ? formData.dueDate.toISOString().split('T')[0] : ''}
+                        onChange={(e) => setFormData({ ...formData, dueDate: new Date(e.target.value) })}
+                    />
+                </div>
+                <div className="flex items-center justify-between">
+                    <label htmlFor="category">Category</label>
                     <select
                         name="category"
                         id="category"
-                        className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                        className="text-black text-[13px] p-0.5 rounded bg-white w-56"
                         required
                         value={formData.category || ''}
                         onChange={(e) => setFormData({ ...formData, category: e.target.value as "side-hustle" | "home" | "personal" | "school" })}
@@ -90,15 +69,29 @@ export default function Goals() {
                         <option value="school">School</option>
                     </select>
                 </div>
-
-                <div>
-                    <label htmlFor="status" className="mr-10">Status</label>
+                <div className="flex items-center justify-between">
+                    <label htmlFor="progress">Progress</label>
+                    <input
+                        type="number"
+                        name="progress"
+                        id="progress"
+                        min="0"
+                        max="100"
+                        className="text-black text-[13px] p-0.5 rounded bg-white w-56"
+                        required
+                        value={formData.progress}
+                        onChange={(e) => setFormData({ ...formData, progress: Number(e.target.value) })}
+                    />
+                </div>
+                <div className="flex items-center justify-between">
+                    <label htmlFor="status">Status</label>
                     <select
                         name="status"
                         id="status"
-                        className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                        className="text-black text-[13px] p-0.5 rounded bg-white w-56"
                         required
-                        
+                        value={formData.status || ''}
+                        onChange={(e) => setFormData({ ...formData, status: e.target.value as "started" | "not-started" | "completed" })}
                     >
                         <option value="">Choose one</option>
                         <option value="todo">Todo</option>
@@ -106,8 +99,96 @@ export default function Goals() {
                         <option value="completed">Completed</option>
                     </select>
                 </div>
-                {loading ? <button className="bg-red-700 cursor-not-allowed opacity-80 mx-auto block p-2">Adding Task...</button> : <button className="bg-red-600 hover:bg-green-600 transition p-2 rounded mx-auto block"
-                    type="submit">Add Task</button>}
+                <div className="pt-4 border-t">
+                    <div className="mb-4 text-lg font-semibold">Add Milestones</div>
+                    <div className="space-y-3 p-4 rounded">
+                        <div className="flex items-center justify-between">
+                            <label htmlFor="milestoneTitle">Title</label>
+                            <input
+                                type="text"
+                                id="milestoneTitle"
+                                name="milestoneTitle"
+                                className="text-black text-[13px] p-0.5 rounded bg-white w-56"
+                                placeholder="eg. complete assignments"
+                                value={formData.milestones?.[0]?.title || ''}
+                                onChange={(e) => {
+                                    const updatedMilestone = formData.milestones ? [...formData.milestones] : [];
+                                    updatedMilestone[0] = {
+                                        ...updatedMilestone[0],
+                                        title: e.target.value,
+                                    };
+                                    setFormData({ ...formData, milestones: updatedMilestone });
+                                }}
+                            />
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <label>Completed?</label>
+                            <div className="flex gap-6 w-56 justify-center">
+                                <label className="flex items-center text-sm cursor-pointer text-white">
+                                    <input
+                                        type="radio"
+                                        name="milestoneCompleted"
+                                        className="mr-2 w-4 h-4"
+                                        checked={formData.milestones?.[0]?.completed === true}
+                                        onChange={() => {
+                                            const updatedMilestones = formData.milestones ? [...formData.milestones] : [];
+                                            updatedMilestones[0] = { ...updatedMilestones[0], completed: true };
+                                            setFormData({ ...formData, milestones: updatedMilestones });
+                                        }}
+                                    />
+                                    Yes
+                                </label>
+                                <label className="flex items-center text-white text-sm cursor-pointer">
+                                    <input
+                                        type="radio"
+                                        name="milestoneCompleted"
+                                        className="mr-2 w-4 h-4"
+                                        checked={formData.milestones?.[0]?.completed === false}
+                                        onChange={() => {
+                                            const updatedMilestones = formData.milestones ? [...formData.milestones] : [];
+                                            updatedMilestones[0] = { ...updatedMilestones[0], completed: false };
+                                            setFormData({ ...formData, milestones: updatedMilestones });
+                                        }}
+                                    />
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <label htmlFor="completedAt" className="mr-4">Completed At</label>
+                            <input
+                                type="date"
+                                id="completedAt"
+                                name="completedAt"
+                                className="text-black text-[13px] p-0.5 rounded bg-white w-56"
+                                value={
+                                    formData.milestones?.[0]?.completedAt instanceof Date
+                                        ? formData.milestones[0].completedAt.toISOString().split('T')[0]
+                                        : ''
+                                }
+                                onChange={(e) => {
+                                    const updatedMilestone = formData.milestones ? [...formData.milestones] : [];
+                                    updatedMilestone[0] = {
+                                        ...updatedMilestone[0],
+                                        completedAt: new Date(e.target.value),
+                                    };
+                                    setFormData({ ...formData, milestones: updatedMilestone });
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="flex justify-center pt-4">
+                    {loading ? (
+                        <button className="bg-red-700 cursor-not-allowed opacity-80 p-2 rounded" disabled>
+                            Adding Task...
+                        </button>
+                    ) : (
+                        <button className="bg-red-600 hover:bg-green-600 transition p-2 rounded px-8" type="submit">
+                            Add Task
+                        </button>
+                    )}
+                </div>
             </form>
         </div>
     )
