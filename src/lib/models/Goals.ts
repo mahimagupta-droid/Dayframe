@@ -1,67 +1,50 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
-type GoalsTypes = {
-    id: string,
-    title: string,
-    description: string,
-    dueDate: Date,
-    category: "side-hustle" | "home" | "personal" | "school",
-    progress: number,
-    status: "started" | "not-started" | "completed",
-    milestones: Array<{
-        title: string,
-        completed: boolean,
-        completedAt: Date
-    }>
-    createdAt: Date,
-    updatedAt: Date
-}
+export type GoalsTypes = {
+  clerkId: string;
+  title: string;
+  description: string;
+  dueDate: Date;
+  category: "side-hustle" | "home" | "personal" | "school";
+  progress: number;
+  status: "started" | "not-started" | "completed";
+  milestones: Array<{
+    title: string;
+    completed: boolean;
+    completedAt: Date;
+  }>;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
-
-const GoalsSchema = new mongoose.Schema<GoalsTypes>({
-    id: {
-        unique: true,
-        required: true,
-        type: String
-    },
-    title: {
-        type: String,
-        required: true,
-    },
-    dueDate: {
-        type: Date,
-        required: true
-    },
-    description: {
-        type: String,
-        required: true
-    },
+const GoalsSchema = new mongoose.Schema<GoalsTypes>(
+  {
+    clerkId: { type: String, required: true, index: true }, // Ties to the user
+    title: { type: String, required: true, trim: true },
+    description: { type: String, required: true },
+    dueDate: { type: Date, required: true },
     category: {
-        enum: ["side-hustle", "home", "personal", "school"],
-        type: String,
-        default: "school"
+      type: String,
+      enum: ["side-hustle", "home", "personal", "school"],
+      default: "school",
     },
-    progress: {
-        type: Number,
-        required: true
-    },
+    // Progress can be a virtual or a pre-save hook calculation
+    progress: { type: Number, default: 0, min: 0, max: 100 },
     status: {
-        type: String,
-        enum: ["started", "not-started", "completed"],
-        default: "not-started"
+      type: String,
+      enum: ["started", "not-started", "completed"],
+      default: "not-started",
     },
     milestones: [
-        {
-            title: String,
-            completed: {
-                type: Boolean,
-                default: false
-            },
-            completedAt: Date
-        }
-    ]
-}, {
-    timestamps: true
-})
+      {
+        title: { type: String, required: true },
+        completed: { type: Boolean, default: false },
+        completedAt: { type: Date },
+      },
+    ],
+  },
+  { timestamps: true },
+);
 
-export const Goals = mongoose.models.Goals || mongoose.model<GoalsTypes>("Goals", GoalsSchema);
+export const Goals =
+  mongoose.models.Goals || mongoose.model<GoalsTypes>("Goals", GoalsSchema);

@@ -16,8 +16,9 @@ export default async function Navigation() {
                         <NavLink href="/">Home</NavLink>
                         <NavLink href="/dashboard">Dashboard</NavLink>
                         <NavLink href="/tasks">Tasks</NavLink>
+                        <NavLink href="/goals">Goals</NavLink>
                         <NavLink href="/calendar">Calendar</NavLink>
-                        <NavLink href="profile-form">Profile Form</NavLink>
+                        <NavLink href="/profile-form">Profile Form</NavLink>
                     </div>
 
                     <SignedOut>
