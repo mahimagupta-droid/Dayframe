@@ -3,77 +3,80 @@ import { Tasks } from "@/lib/models/Tasks";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
+//CREATE
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const {userId} = await auth();
+    if(!userId) return NextResponse.json(
+      {message: "User unauthorised!"},
+      {status: 401}
+    )
     await dbConnect();
     const body = await request.json();
-
-    //check for valid date
-    const date = new Date(body.deadline);
-    if(isNaN(date.getTime())){
-        return NextResponse.json({ error: "Invalid date format" }, { status: 400 });
-    }
-
-    // Check if deadline is in the past
-    if (date < new Date(new Date().setHours(0,0,0,0))) {
-      return NextResponse.json({ error: "Deadline cannot be in the past." }, { status: 400 });
-    }
-
-    //check if any of the fields that have enums are empty strings, if they are, set them to undefined so that the default value is used in the schema
-    const fieldsToCheck = ['deadline', 'priority', 'category', 'difficulty', 'timeRequired', 'status']
-    fieldsToCheck.forEach((field) => {
-        if(body[field] === ""){
-            body[field] = undefined;
-        }
-    })
-    const { title, deadline, priority, description, category, difficulty, timeRequired, status } = body;
-    const newTask = await Tasks.create({
-      clerkId: userId,
-      title,
-      deadline,
-      priority,
-      description,
-      category,
-      difficulty,
-      timeRequired,
-      status,
-    });
-    return NextResponse.json({
-      success: true,
-      task: newTask,
-    });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-}
-
-export async function GET() {
-  try {
-    const { userId } = await auth();
-    if (!userId)
+    // check if the date format is invalid
+    const date = new Date(body.deadline)
+    if (isNaN(date.getTime())) {
       return NextResponse.json(
-        { message: "User unauthorised" },
-        { status: 401 },
+        { error: "Invalid date format" },
+        { status: 400 },
       );
-    await dbConnect();
-    const reqBody = await Tasks.findOne({ clerkId: userId });
-    if (reqBody) {
+    }
+    //check if deadline date entered is of past
+    if (date < new Date(new Date().setHours(0, 0, 0, 0))) {
+      return NextResponse.json(
+        { error: "Deadline cannot be in the past." },
+        { status: 400 },
+      );
+    }
+    // check if every field meets the criteria or not " '' "
+    const fieldsToCheck = ['priority', 'difficulty', 'timeRequired', 'category', 'status']
+    fieldsToCheck.forEach((field) => {
+      if(body[field] === ''){
+        body[field] = undefined
+      }
+    });
+    const {title, deadline, priority, difficulty, timeRequired, description, category, status} = body;
+    const task = await Tasks.create({
+      clerkId: userId,
+      title, 
+      deadline, 
+      priority, 
+      difficulty, 
+      timeRequired, 
+      description, 
+      category, 
+      status
+    })
+    if(task){
       return NextResponse.json({
         success: true,
-        goals: reqBody,
-      });
+        tasks: task
+      })
     } else {
-      return NextResponse.json({
-        success: false,
-        status: 404,
-      });
+      return NextResponse.json(
+        {message: "Error adding tasks"},
+        {status: 404}
+      )
     }
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      {message: error.message},
+      {status: 500}
+    )
   }
 }
+
+// // READ
+// export async function GET(params:type) {
+  
+// }
+
+// //UPDATE
+// export async function PUT(params:type) {
+  
+// }
+
+// // DELETE
+// export async function DELETE(params:type) {
+  
+// }

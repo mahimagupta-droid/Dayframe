@@ -5,83 +5,33 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 export default function Tasks() {
+    const [submitData, setSubmitData] = useState<Partial<TasksTypes | null>>(null);
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState<Partial<TasksTypes>>({});
-    const [tasksData, setTasksData] = useState<Partial<TasksTypes | null>>(null)
-
-    const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             setLoading(true);
             const response = await fetch("/api/tasks", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type" : "application/json"
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(submitData)
             })
-            setFormData({});
-            if (response.ok) {
-                setFormData({})
-                toast.success("Task added successfully!");
+            if(response.ok){
+                toast.success("successfully created a task...");
+                console.log(response)
+                setSubmitData(null);
             } else {
-                const errorData = await response.json();
-                toast.error(`Error: ${errorData.error}`);
-            }
-        } catch (error) {
-            setLoading(false);
-            const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-            toast.error(`Error: ${errorMessage}`);
-        } finally {
-            setLoading(false);
-        }
-    }
-    const handleFetch = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch("/api/goals");
-            if (response.ok) {
-                const body = await response.json();
-                if (body.success && body.goals) {
-                    setTasksData(body.goals);
-                    toast.success("Data fetch request successful!")
-                } else {
-                    setLoading(false);
-                    setTasksData(null);
-                    console.log("unsuccessful data fetch")
-                }
+                toast.error("error creating a task")
             }
         } catch (error: any) {
-            setLoading(false);
-            setTasksData(null);
-            toast.error(error.message);
+            toast.error(`Error: ${error.message}`)
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
     }
-    useEffect(() => {
-        handleFetch();
-    }, [])
-
-    if (loading) {
-        return (
-            <div className="flex flex-col justify-center items-center min-h-screen p-4">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
-            </div>
-        )
-    }
-
-    if (tasksData != null && !loading) {
-        return (
-            <div className="text-white text-2xl flex flex-col justify-center items-center border-white">
-                <p>{tasksData.title}</p>
-                <p>{tasksData.description}</p>
-                <p>{tasksData.deadline instanceof Date ? tasksData.deadline.toISOString().split('T')[0] : tasksData.deadline}</p>
-                <p>{tasksData.category}</p>
-            </div>
-        )
-    }
-
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen text-white">
@@ -99,8 +49,8 @@ export default function Tasks() {
                         required
                         className="text-black text-[13px] p-0.5 rounded bg-white w-40"
                         placeholder="eg. complete assignments"
-                        value={formData.title || ''}
-                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        value={submitData?.title}
+                        onChange={(e) => setSubmitData({ ...submitData, title: e.target.value })}
                     />
                 </div>
                 <div className="p-3">
@@ -111,8 +61,8 @@ export default function Tasks() {
                         name="deadline"
                         required
                         className="text-black text-[15px] p-0.5 rounded bg-white w-40"
-                        value={formData.deadline instanceof Date ? formData.deadline.toISOString().split('T')[0] : ''}
-                        onChange={(e) => setFormData({ ...formData, deadline: new Date(e.target.value) })}
+                        value={submitData?.deadline instanceof Date ? submitData.deadline.toISOString().split('T')[0] : ''}
+                        onChange={(e) => setSubmitData({ ...submitData, deadline: new Date(e.target.value) })}
                     />
                 </div>
                 <div className="p-3">
@@ -122,8 +72,8 @@ export default function Tasks() {
                         id="priority"
                         className="text-black text-[15px] p-0.5 rounded bg-white w-40"
                         required
-                        value={formData.priority || ''}
-                        onChange={(e) => setFormData({ ...formData, priority: e.target.value as "high" | "medium" | "low" })}
+                        value={submitData?.priority}
+                        onChange={(e) => setSubmitData({ ...submitData, priority: e.target.value as "high" | "medium" | "low" })}
                     >
                         <option value="">Choose one</option>
                         <option value="high">High</option>
@@ -138,8 +88,8 @@ export default function Tasks() {
                         id="difficulty"
                         className="text-black text-[15px] p-0.5 rounded bg-white w-40"
                         required
-                        value={formData.difficulty || ''}
-                        onChange={(e) => setFormData({ ...formData, difficulty: e.target.value as "hard" | "medium" | "easy" })}
+                        value={submitData?.difficulty}
+                        onChange={(e) => setSubmitData({ ...submitData, difficulty: e.target.value as "hard" | "medium" | "easy" })}
                     >
                         <option value="">Choose one</option>
                         <option value="hard">Hard</option>
@@ -154,8 +104,8 @@ export default function Tasks() {
                         id="timeRequired"
                         className="text-black text-[15px] p-0.5 rounded bg-white w-40"
                         required
-                        value={formData.timeRequired || ''}
-                        onChange={(e) => setFormData({ ...formData, timeRequired: e.target.value as "long" | "medium" | "short" })}
+                        value={submitData?.timeRequired}
+                        onChange={(e) => setSubmitData({ ...submitData, timeRequired: e.target.value as "long" | "medium" | "short" })}
                     >
                         <option value="">Choose one</option>
                         <option value="long">Long</option>
@@ -171,8 +121,8 @@ export default function Tasks() {
                         className="rounded min-h-6 text-black w-36 text-[13px]"
                         placeholder="physics, maths"
                         required
-                        value={formData.description || ''}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        value={submitData?.description}
+                        onChange={(e) => setSubmitData({ ...submitData, description: e.target.value })}
                     />
                 </div>
                 <div className="p-3">
@@ -182,8 +132,8 @@ export default function Tasks() {
                         id="category"
                         className="text-black text-[15px] p-0.5 rounded bg-white w-40"
                         required
-                        value={formData.category || ''}
-                        onChange={(e) => setFormData({ ...formData, category: e.target.value as "side-hustle" | "home" | "personal" | "school" })}
+                        value={submitData?.category}
+                        onChange={(e) => setSubmitData({ ...submitData, category: e.target.value as "side-hustle" | "home" | "personal" | "school" })}
                     >
                         <option value="">Choose one</option>
                         <option value="side-hustle">Side Hustle</option>
@@ -199,8 +149,8 @@ export default function Tasks() {
                         id="status"
                         className="text-black text-[15px] p-0.5 rounded bg-white w-40"
                         required
-                        value={formData.status || ''}
-                        onChange={(e) => setFormData({ ...formData, status: e.target.value as "todo" | "in-progress" | "completed" })}
+                        value={submitData?.status || ''}
+                        onChange={(e) => setSubmitData({ ...submitData, status: e.target.value as "todo" | "in-progress" | "completed" })}
                     >
                         <option value="">Choose one</option>
                         <option value="todo">Todo</option>

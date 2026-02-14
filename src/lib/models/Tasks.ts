@@ -25,6 +25,8 @@ const TasksSchema = new mongoose.Schema<TasksTypes>(
       nullable: true,
     },
     title: { type: String, required: true },
+    description: { type: String, required: true },
+    category: { type: String, enum: ["side-hustle", "home", "personal", "school"], default: "school"},
     deadline: { type: Date, required: true },
     priority: {
       type: String,
