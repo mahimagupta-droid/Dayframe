@@ -66,10 +66,35 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// // READ
-// export async function GET(params:type) {
-  
-// }
+// READ
+export async function GET() {
+  try {
+    const {userId} = await auth();
+    if(!userId) return NextResponse.json(
+      {message: "User unauthorised!"},
+      {status: 401}
+    )
+    await dbConnect();
+    const taskBody = await Tasks.find({clerkId: userId})
+    if(taskBody){
+      return NextResponse.json({
+        success: true,
+        tasks: taskBody
+      })
+    } else {
+      return NextResponse.json(
+        {message: "Error loading tasks"},
+        {status: 404}
+      )
+    }
+  } catch (error: any) {
+    return NextResponse.json(
+      {message: error.message},
+      {status: 500}
+    )
+  }
+}
+
 
 // //UPDATE
 // export async function PUT(params:type) {
