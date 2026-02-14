@@ -5,9 +5,9 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 export default function Tasks() {
-    const [submitData, setSubmitData] = useState<Partial<TasksTypes | null>>(null);
+    const [submitData, setSubmitData] = useState<Partial<TasksTypes>>({});
     const [loading, setLoading] = useState(false);
-    
+    const [taskData, setTaskData] = useState<TasksTypes[]>([])
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
@@ -15,14 +15,15 @@ export default function Tasks() {
             const response = await fetch("/api/tasks", {
                 method: "POST",
                 headers: {
-                    "Content-Type" : "application/json"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(submitData)
             })
-            if(response.ok){
+            if (response.ok) {
                 toast.success("successfully created a task...");
                 console.log(response)
-                setSubmitData(null);
+                setSubmitData({});
+                await handleFetch();
             } else {
                 toast.error("error creating a task")
             }
@@ -33,8 +34,49 @@ export default function Tasks() {
         }
     }
 
+    const handleFetch = async () => {
+        try {
+            setLoading(true);
+            const getResponse = await fetch("/api/tasks", {
+                method: "GET",
+                headers: { "Content-Type": "application/json" }
+
+            });
+            if (getResponse.ok) {
+                const responseBody = await getResponse.json();
+                setTaskData(responseBody.tasks)
+                toast.success("success fetching data")
+                console.log(getResponse)
+            }
+        } catch (error: any) {
+            toast.error(`Error: ${error.message}`)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        handleFetch();
+    }, [])
+
+
     return (
+
         <div className="flex flex-col items-center justify-center min-h-screen text-white">
+            <div className="mt-10">
+                <h2 className="text-xl mb-4">Your Tasks</h2>
+                {taskData.length === 0 ? (
+                    <p>No tasks found</p>
+                ) : (
+                    taskData.map((task, index) => (
+                        <div key={index} className="border p-3 mb-2 rounded">
+                            <h3 className="font-bold">{task.title}</h3>
+                            <p>{task.description}</p>
+                            <p>Status: {task.status}</p>
+                        </div>
+                    ))
+                )}
+            </div>
             <div className="text-2xl mb-5">Fill in the task</div>
             <form
                 onSubmit={handleSubmit}
