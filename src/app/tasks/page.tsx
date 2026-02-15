@@ -7,20 +7,26 @@ import toast from "react-hot-toast";
 
 export default function Tasks() {
     const [submitData, setSubmitData] = useState<Partial<TasksTypes>>({});
-    const [loading, setLoading] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
     const [taskData, setTaskData] = useState<TasksTypes[] | null>(null)
     const [isEditing, setIsEditing] = useState(false)
     const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false)
 
     const handleEditClick = (task: TasksTypes) => {
+        console.log("Clicked Edit. Task:", task);
         setIsEditing(true);
         setSubmitData(task);
+        if (task) {
+            console.log("Setting submitData to:", task);
+        }
         setEditingTaskId(task._id);
     }
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             setLoading(true);
+            console.log("Submitting task data:", submitData);
             const response = await fetch("/api/tasks", {
                 method: "POST",
                 headers: {
@@ -94,7 +100,7 @@ export default function Tasks() {
 
     const handleDelete = async (id: string) => {
         try {
-            setLoading(true);
+            setDeleteLoading(true);
             const response = await fetch(`/api/tasks/${id}`, {
                 method: "DELETE"
             })
@@ -110,7 +116,7 @@ export default function Tasks() {
             console.log(error.message)
             toast.error(error.message)
         } finally {
-            setLoading(false)
+            setDeleteLoading(false)
         }
     }
     useEffect(() => {
@@ -120,7 +126,7 @@ export default function Tasks() {
     if (isEditing) {
         return (
             <div className="flex items-center justify-center h-screen w-full overflow-hidden">
-                <div className="flex flex-col items-center justify-center w-[75%] bg-slate-400 p-2 rounded border">
+                <div className="flex flex-col items-center justify-center w-[75%] p-2 rounded">
                     <div className="text-2xl mb-5">Edit task</div>
                     <form
                         onSubmit={handleEdit}
@@ -147,8 +153,14 @@ export default function Tasks() {
                                 name="deadline"
                                 required
                                 className="text-black text-[15px] p-0.5 rounded bg-white w-40"
-                                value={submitData?.deadline instanceof Date ? submitData.deadline.toISOString().split('T')[0] : ''}
-                                onChange={(e) => setSubmitData({ ...submitData, deadline: new Date(e.target.value) })}
+                                value={
+                                    submitData?.deadline
+                                        ? new Date(submitData.deadline).toISOString().split("T")[0]
+                                        : ""
+                                }
+                                onChange={(e) =>
+                                    setSubmitData({ ...submitData, deadline: new Date(e.target.value) })
+                                }
                             />
                         </div>
                         <div className="p-3">
@@ -204,10 +216,10 @@ export default function Tasks() {
                             <textarea
                                 name="description"
                                 id="edit-description"
-                                className="rounded min-h-6 text-black w-36 text-[13px]"
+                                className="rounded min-h-6 text-black w-36 text-[13px] border bg-gray-50"
                                 placeholder="physics, maths"
                                 required
-                                value={submitData?.description}
+                                value={submitData?.description || ""}
                                 onChange={(e) => setSubmitData({ ...submitData, description: e.target.value })}
                             />
                         </div>
@@ -275,11 +287,13 @@ export default function Tasks() {
                                 <div key={index} className="flex">
                                     <div className="border p-3 mb-2 rounded">
                                         <h3 className="font-bold">{task.title}</h3>
-                                        <p>{task.description}</p>
+                                        <p>{task.description || "No description provided"}</p>
                                         <p>Status: {task.status}</p>
                                     </div>
                                     <button onClick={() => handleEditClick(task)} className="bg-red-700 p-2 m-3 cursor-pointer rounded">Edit</button>
-                                    <button onClick={() => handleDelete(task._id)} className="bg-red-700 p-2 m-3 cursor-pointer rounded">Delete</button>
+                                    {deleteLoading ? <button className="bg-red-700 cursor-not-allowed opacity-80 mx-auto block p-2">Adding Task...</button> : <button className="hover:bg-green-600 bg-red-700 p-2 m-3 cursor-pointer rounded"
+                                        onClick={() => handleDelete(task._id)}>Delete</button>}
+                                    {/* <button onClick={() => handleDelete(task._id)} className="bg-red-700 p-2 m-3 cursor-pointer rounded">Delete</button> */}
                                 </div>
                             ))
                         )}

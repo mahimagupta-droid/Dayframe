@@ -52,6 +52,7 @@ export async function POST(request: NextRequest) {
       category,
       status,
     } = body;
+    console.log("Preparing to create task. Description:", description);
     const task = await Tasks.create({
       clerkId: userId,
       title,
@@ -74,6 +75,7 @@ export async function POST(request: NextRequest) {
         { status: 404 },
       );
     }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
@@ -101,6 +103,7 @@ export async function GET() {
         { status: 404 },
       );
     }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
