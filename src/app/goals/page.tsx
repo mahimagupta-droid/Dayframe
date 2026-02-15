@@ -258,7 +258,7 @@ if (loading) {
                             Add Task
                         </button>
                     )}
-                </div>
+                </div> 
             </form>
         </div>
     )

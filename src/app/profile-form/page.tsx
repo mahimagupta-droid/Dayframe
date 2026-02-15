@@ -99,8 +99,7 @@ export default function ProfileForm() {
             setIsEditing(false);
         }
     }
-
-    console.log((user))
+    
     useEffect(() => {
         handleFetch();
     }, [])
