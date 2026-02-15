@@ -6,15 +6,16 @@ import { NextRequest, NextResponse } from "next/server";
 //CREATE
 export async function POST(request: NextRequest) {
   try {
-    const {userId} = await auth();
-    if(!userId) return NextResponse.json(
-      {message: "User unauthorised!"},
-      {status: 401}
-    )
+    const { userId } = await auth();
+    if (!userId)
+      return NextResponse.json(
+        { message: "User unauthorised!" },
+        { status: 401 },
+      );
     await dbConnect();
     const body = await request.json();
     // check if the date format is invalid
-    const date = new Date(body.deadline)
+    const date = new Date(body.deadline);
     if (isNaN(date.getTime())) {
       return NextResponse.json(
         { error: "Invalid date format" },
@@ -29,79 +30,80 @@ export async function POST(request: NextRequest) {
       );
     }
     // check if every field meets the criteria or not " '' "
-    const fieldsToCheck = ['priority', 'difficulty', 'timeRequired', 'category', 'status']
+    const fieldsToCheck = [
+      "priority",
+      "difficulty",
+      "timeRequired",
+      "category",
+      "status",
+    ];
     fieldsToCheck.forEach((field) => {
-      if(body[field] === ''){
-        body[field] = undefined
+      if (body[field] === "") {
+        body[field] = undefined;
       }
     });
-    const {title, deadline, priority, difficulty, timeRequired, description, category, status} = body;
+    const {
+      title,
+      deadline,
+      priority,
+      difficulty,
+      timeRequired,
+      description,
+      category,
+      status,
+    } = body;
     const task = await Tasks.create({
       clerkId: userId,
-      title, 
-      deadline, 
-      priority, 
-      difficulty, 
-      timeRequired, 
-      description, 
-      category, 
-      status
-    })
-    if(task){
+      title,
+      deadline,
+      priority,
+      difficulty,
+      timeRequired,
+      description,
+      category,
+      status,
+    });
+    if (task) {
       return NextResponse.json({
         success: true,
-        tasks: task
-      })
+        tasks: task,
+      });
     } else {
       return NextResponse.json(
-        {message: "Error adding tasks"},
-        {status: 404}
-      )
+        { message: "Error adding tasks" },
+        { status: 404 },
+      );
     }
   } catch (error: any) {
-    return NextResponse.json(
-      {message: error.message},
-      {status: 500}
-    )
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
 
 // READ
 export async function GET() {
   try {
-    const {userId} = await auth();
-    if(!userId) return NextResponse.json(
-      {message: "User unauthorised!"},
-      {status: 401}
-    )
+    const { userId } = await auth();
+    if (!userId)
+      return NextResponse.json(
+        { message: "User unauthorised!" },
+        { status: 401 },
+      );
     await dbConnect();
-    const taskBody = await Tasks.find({clerkId: userId})
-    if(taskBody){
+    const taskBody = await Tasks.find({ clerkId: userId });
+    if (taskBody) {
       return NextResponse.json({
         success: true,
-        tasks: taskBody
-      })
+        tasks: taskBody,
+      });
     } else {
       return NextResponse.json(
-        {message: "Error loading tasks"},
-        {status: 404}
-      )
+        { message: "Error loading tasks" },
+        { status: 404 },
+      );
     }
   } catch (error: any) {
-    return NextResponse.json(
-      {message: error.message},
-      {status: 500}
-    )
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
 
 
-// //UPDATE
-// export async function PUT(params:type) {
-  
-// }
-
-// // DELETE
-// export async function DELETE(params:type) {
-  
-// }

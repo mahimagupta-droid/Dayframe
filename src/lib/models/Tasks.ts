@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 export type TasksTypes = {
+  _id: string;
   clerkId: string;
   goalId?: mongoose.Types.ObjectId;
   title: string;
