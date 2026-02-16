@@ -47,13 +47,13 @@ export default function Goals() {
     }
 
     return (
-        <div className="flex items-center justify-center h-screen w-full overflow-hidden gap-14 ml-4">
-            <section className="w-1/2 p-2 h-[80vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+        <div className="flex items-center justify-center h-screen w-full overflow-hidden gap-14 ml-9 mr-4">
+            <section className="w-1/2 p-2 h-[85vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none] mt-12">
                 <div className="flex flex-col items-center justify-center w-[75%] border rounded bg-neutral-900">
                     goals fetched data
                 </div>
             </section>
-            <section className="w-1/2 p-2 h-[80vh] mr-4 flex justify-center">
+            <section className="w-1/2 p-2 h-[85vh] mr-4 flex justify-center mt-12">
                 <div className="w-[75%] border rounded flex flex-col bg-neutral-900">
                     <form className="rounded p-2 flex flex-col items-center overflow-y-auto h-full" onSubmit={handleSubmit}>
                         <div className="text-2xl underline">Fill the Goals here!</div>
