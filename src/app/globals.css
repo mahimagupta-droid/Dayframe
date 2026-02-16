@@ -6,6 +6,9 @@ body {
   height: 100%;
   overflow-x: hidden;
 }
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari and Opera */
+}
 
 :root {
   /* Custom Theme Colors merged with Shadcn UI variables */

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 export type GoalsTypes = {
-  clerkId: string;
+  clerkId: string; 
   title: string;
   description: string;
   dueDate: Date;
@@ -10,8 +10,8 @@ export type GoalsTypes = {
   status: "todo" | "in-progress" | "completed";
   milestones: Array<{
     title: string;
-    completed: boolean;
-    completedAt: Date;
+    completed?: boolean;
+    completedAt?: Date;
   }>;
   createdAt: Date;
   updatedAt: Date;

@@ -1,265 +1,132 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
-
-import { GoalsTypes } from "@/lib/models/Goals";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-
 export default function Goals() {
-    const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState<Partial<GoalsTypes>>({});
-    const [goals, setGoals] = useState<Partial<GoalsTypes> | null>(null);
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        try {
-            setLoading(true);
-            const response = await fetch("/api/goals", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData)
-            })
-            if (response.ok) {
-                toast.success("Goal added successfully!");
-                setLoading(false);
-            }
-        } catch (error: any) {
-            setLoading(false);
-            toast.error(error.message)
-        } finally {
-            setLoading(false)
-        }
-    }
-    const handleFetch = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch("/api/goals");
-            if(response.ok){
-                const body = await response.json();   
-                if(body.success && body.goals){
-                    setGoals(body.goals);
-                    toast.success("Data fetch request successful!")    
-                } else {
-                    setLoading(false);
-                    setGoals(null);
-                    console.log("unsuccessful data fetch")
-                }
-            }
-        } catch (error: any) {
-            setLoading(false);
-            setGoals(null);
-            toast.error(error.message);
-        } finally {
-            setLoading(false);
-        }
-    }
-    useEffect(() => {
-        handleFetch();
-    }, [])
-    // console.log(goals)
-
-if (loading) {
-        return (
-            <div className="flex flex-col justify-center items-center min-h-screen p-4">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
-            </div>
-        )
-    }
-
-    if(goals!=null && !loading){
-        return (
-            <div className="text-white text-2xl flex flex-col justify-center items-center border-white">
-                <p>{goals.title}</p>
-                <p>{goals.description}</p>
-                <p>{goals.dueDate instanceof Date ? goals.dueDate.toISOString().split('T')[0] : goals.dueDate}</p>
-                <p>{goals.category}</p>
-            </div>
-        )
-    }
-  
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen text-white p-4 mt-4">
-            <div className="text-3xl mb-3 font-lexend">Enter Goals</div>
-            <form
-                className="border rounded p-6 space-y-4 w-full max-w-lg bg-zinc-900"
-                onSubmit={handleSubmit}
-            >
-                <div className="flex items-center justify-between">
-                    <label htmlFor="title">Title</label>
-                    <input
-                        type="text"
-                        id="title"
-                        name="title"
-                        required
-                        className="text-black text-[13px] p-0.5 rounded bg-white w-56"
-                        placeholder="eg. complete assignments"
-                        value={formData.title || ''}
-                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    />
+        <div className="flex items-center justify-center h-screen w-full overflow-hidden gap-14 ml-4">
+            <section className="w-1/2 p-2 h-[80vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+                <div className="flex flex-col items-center justify-center w-[75%] border rounded">
+                    goals fetched data
                 </div>
-                <div className="flex justify-between">
-                    <label htmlFor="description">Description</label>
-                    <textarea
-                        name="description"
-                        id="description"
-                        className="rounded min-h-20 text-black w-56 text-[13px] p-1"
-                        placeholder="physics, maths"
-                        required
-                        value={formData.description || ''}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    />
-                </div>
-                <div className="flex items-center justify-between">
-                    <label htmlFor="dueDate">Due Date</label>
-                    <input
-                        type="date"
-                        name="dueDate"
-                        id="dueDate"
-                        className="text-black text-[13px] p-0.5 rounded bg-white w-56"
-                        required
-                        value={formData?.dueDate instanceof Date ? formData.dueDate.toISOString().split('T')[0] : ''}
-                        onChange={(e) => setFormData({ ...formData, dueDate: new Date(e.target.value) })}
-                    />
-                </div>
-                <div className="flex items-center justify-between">
-                    <label htmlFor="category">Category</label>
-                    <select
-                        name="category"
-                        id="category"
-                        className="text-black text-[13px] p-0.5 rounded bg-white w-56"
-                        required
-                        value={formData.category || ''}
-                        onChange={(e) => setFormData({ ...formData, category: e.target.value as "side-hustle" | "home" | "personal" | "school" })}
-                    >
-                        <option value="">Choose one</option>
-                        <option value="side-hustle">Side Hustle</option>
-                        <option value="home">Home</option>
-                        <option value="personal">Personal</option>
-                        <option value="school">School</option>
-                    </select>
-                </div>
-                <div className="flex items-center justify-between">
-                    <label htmlFor="progress">Progress</label>
-                    <input
-                        type="number"
-                        name="progress"
-                        id="progress"
-                        min="0"
-                        max="100"
-                        className="text-black text-[13px] p-0.5 rounded bg-white w-56"
-                        required
-                        value={formData.progress}
-                        onChange={(e) => setFormData({ ...formData, progress: Number(e.target.value) })}
-                    />
-                </div>
-                <div className="flex items-center justify-between">
-                    <label htmlFor="status">Status</label>
-                    <select
-                        name="status"
-                        id="status"
-                        className="text-black text-[13px] p-0.5 rounded bg-white w-56"
-                        required
-                        value={formData.status || ''}
-                        onChange={(e) => setFormData({ ...formData, status: e.target.value as "todo" | "in-progress" | "completed" })}
-                    >
-                        <option value="">Choose one</option>
-                        <option value="todo">Todo</option>
-                        <option value="in-progress">In-Progress</option>
-                        <option value="completed">Completed</option>
-                    </select>
-                </div>
-                <div className="pt-4 border-t">
-                    <div className="mb-4 text-lg font-semibold">Add Milestones</div>
-                    <div className="space-y-3 p-4 rounded">
-                        <div className="flex items-center justify-between">
-                            <label htmlFor="milestoneTitle">Title</label>
-                            <input
-                                type="text"
-                                id="milestoneTitle"
-                                name="milestoneTitle"
-                                className="text-black text-[13px] p-0.5 rounded bg-white w-56"
-                                placeholder="eg. complete assignments"
-                                value={formData.milestones?.[0]?.title || ''}
-                                onChange={(e) => {
-                                    const updatedMilestone = formData.milestones ? [...formData.milestones] : [];
-                                    updatedMilestone[0] = {
-                                        ...updatedMilestone[0],
-                                        title: e.target.value,
-                                    };
-                                    setFormData({ ...formData, milestones: updatedMilestone });
-                                }}
-                            />
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <label>Completed?</label>
-                            <div className="flex gap-6 w-56 justify-center">
-                                <label className="flex items-center text-sm cursor-pointer text-white">
-                                    <input
-                                        type="radio"
-                                        name="milestoneCompleted"
-                                        className="mr-2 w-4 h-4"
-                                        checked={formData.milestones?.[0]?.completed === true}
-                                        onChange={() => {
-                                            const updatedMilestones = formData.milestones ? [...formData.milestones] : [];
-                                            updatedMilestones[0] = { ...updatedMilestones[0], completed: true };
-                                            setFormData({ ...formData, milestones: updatedMilestones });
-                                        }}
-                                    />
-                                    Yes
+            </section>
+            <section className="w-1/2 p-2 h-[80vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none] mr-4">
+                <div className="flex flex-col items-center justify-center w-[75%] border rounded">
+                    <form action="POST" className="rounded p-2">
+                        <div>Fill the Goals here!</div>
+                        <div>
+                            <div className="p-3">
+                                <label
+                                    htmlFor="title"
+                                    className="mr-12"
+                                >
+                                    Title:
                                 </label>
-                                <label className="flex items-center text-white text-sm cursor-pointer">
-                                    <input
-                                        type="radio"
-                                        name="milestoneCompleted"
-                                        className="mr-2 w-4 h-4"
-                                        checked={formData.milestones?.[0]?.completed === false}
-                                        onChange={() => {
-                                            const updatedMilestones = formData.milestones ? [...formData.milestones] : [];
-                                            updatedMilestones[0] = { ...updatedMilestones[0], completed: false };
-                                            setFormData({ ...formData, milestones: updatedMilestones });
-                                        }}
-                                    />
-                                    No
+                                <input
+                                    type="text"
+                                    name="title"
+                                    id="title"
+                                    className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                                />
+                            </div>
+                            <div className="p-3">
+                                <label
+                                    htmlFor="description"
+                                    className="mr-12"
+                                >
+                                    Description
                                 </label>
+                                <textarea
+                                    name="description"
+                                    id="description"
+                                    className="rounded min-h-6 text-black w-36 text-[13px]"
+                                />
+                            </div>
+                            <div className="p-3">
+                                <label
+                                    htmlFor="dueDate"
+                                    className="mr-12"
+                                >
+                                    Due Date
+                                </label>
+                                <input
+                                    type="date"
+                                    name="dueDate"
+                                    id="dueDate"
+                                    className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                />
+                            </div>
+                            <div className="p-3">
+                                <label htmlFor="category" className="mr-5">Category</label>
+                                <select
+                                    name="category"
+                                    id="category"
+                                    className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                    required
+                                >
+                                    <option value="">Choose one</option>
+                                    <option value="side-hustle">side-hustle</option>
+                                    <option value="home">home</option>
+                                    <option value="personal">personal</option>
+                                    <option value="school">school</option>
+                                </select>
+                            </div>
+                            <div className="p-3">
+                                <label className="mr-5 font-medium">Progress (%)</label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                                    placeholder="0 - 100"
+                                />
+                            </div>
+                            <div className="p-3">
+                                <label htmlFor="status" className="mr-5">Status</label>
+                                <select name="status" id="status" className="text-black text-[15px] p-0.5 rounded bg-white w-40">
+                                    <option value="">Choose one</option>
+                                    <option value="todo">todo</option>
+                                    <option value="in-progress">in-progress</option>
+                                    <option value="completed">completed</option>
+                                </select>
+                            </div>
+                            <div className="p-3">
+                                <p>Create Milestones</p>
+                                <div>
+                                    <div>
+                                        <label htmlFor="title">Title</label>
+                                        <input type="text" name="title" id="title" />
+                                    </div>
+                                    <div className="flex flex-row">
+                                        <label htmlFor="completed?">Completed?</label>
+                                        <label>
+                                            <input
+                                                type="radio"
+                                                name="milestoneCompleted"
+                                                value="yes"
+                                                className="accent-indigo-600"
+                                            />
+                                            Yes
+                                        </label>
+                                        <label className="flex items-center gap-2">
+                                            <input
+                                                type="radio"
+                                                name="milestoneCompleted"
+                                                value="no"
+                                                className="accent-indigo-600"
+                                            />
+                                            No
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="completedAt">Completed At?</label>
+                                        <input type="date" name="completedAt" id="completedAt" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div className="flex items-center justify-between">
-                            <label htmlFor="completedAt" className="mr-4">Completed At</label>
-                            <input
-                                type="date"
-                                id="completedAt"
-                                name="completedAt"
-                                className="text-black text-[13px] p-0.5 rounded bg-white w-56"
-                                value={
-                                    formData.milestones?.[0]?.completedAt instanceof Date
-                                        ? formData.milestones[0].completedAt.toISOString().split('T')[0]
-                                        : ''
-                                }
-                                onChange={(e) => {
-                                    const updatedMilestone = formData.milestones ? [...formData.milestones] : [];
-                                    updatedMilestone[0] = {
-                                        ...updatedMilestone[0],
-                                        completedAt: new Date(e.target.value),
-                                    };
-                                    setFormData({ ...formData, milestones: updatedMilestone });
-                                }}
-                            />
+                        <div className="flex items-center justify-center mt-3">
+                            <button className="bg-red-600 p-2 rounded">Create Goal</button>
                         </div>
-                    </div>
+                    </form>
                 </div>
-                <div className="flex justify-center pt-4">
-                    {loading ? (
-                        <button className="bg-red-700 cursor-not-allowed opacity-80 p-2 rounded" disabled>
-                            Adding Task...
-                        </button>
-                    ) : (
-                        <button className="bg-red-600 hover:bg-green-600 transition p-2 rounded px-8" type="submit">
-                            Add Task
-                        </button>
-                    )}
-                </div> 
-            </form>
+            </section>
         </div>
     )
 }
