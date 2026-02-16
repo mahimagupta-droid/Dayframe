@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-
+import Link from "next/link";
 export default async function Home() {
   const {userId} = await auth();
   if(!userId){
@@ -8,7 +8,9 @@ export default async function Home() {
        <div className="underline">
          Dayframe -  Student Productivity and Life Manager
        </div>
-        <div className="text-2xl mt-12 not-italic bg-slate-800 p-4 rounded-xl border-slate-800 opacity-80">Please login to continue</div>
+        <Link href='/profile-form'>
+          <div className="text-2xl mt-12 not-italic bg-slate-800 p-4 rounded-xl border-slate-800 opacity-80">Please login to continue</div>
+        </Link>
     </div>
     )
   }
