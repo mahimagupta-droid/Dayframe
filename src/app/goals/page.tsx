@@ -1,6 +1,7 @@
 "use client";
 import { GoalsTypes } from "@/lib/models/Goals";
 import { useState, ChangeEvent } from "react";
+import toast from "react-hot-toast";
 export default function Goals() {
     const [formData, setFormData] = useState<Partial<GoalsTypes>>({
         milestones: [
@@ -11,6 +12,39 @@ export default function Goals() {
             },
         ],
     });
+    const [loading, setLoading] = useState(false);
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        try {
+            setLoading(true);
+            const res = await fetch("/api/goals", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+            const data = await res.json();
+            if (data.success && data.goal) {
+                setFormData({
+                    milestones: [
+                        {
+                            title: "",
+                            completed: false,
+                            completedAt: undefined,
+                        },
+                    ],
+                });
+                toast.success("Goal created successfully");
+            } else {
+                toast.error(data.error || "Failed to create goal");
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <div className="flex items-center justify-center h-screen w-full overflow-hidden gap-14 ml-4">
@@ -21,7 +55,7 @@ export default function Goals() {
             </section>
             <section className="w-1/2 p-2 h-[80vh] mr-4 flex justify-center">
                 <div className="w-[75%] border rounded flex flex-col">
-                    <form className="rounded p-2 flex flex-col items-center overflow-y-auto h-full">
+                    <form className="rounded p-2 flex flex-col items-center overflow-y-auto h-full" onSubmit={handleSubmit}>
                         <div>Fill the Goals here!</div>
                         <div>
                             <div className="p-3">
@@ -198,7 +232,6 @@ export default function Goals() {
                                                     setFormData({ ...formData, milestones: updatedMilestones });
                                                 }}
                                                 className="text-black text-[13px] p-0.5 rounded bg-white w-40"
-                                                required
                                             />
                                         </div>
                                     </div>
@@ -207,7 +240,7 @@ export default function Goals() {
 
                         </div>
                         <div className="flex items-center justify-center mt-3">
-                            <button className="bg-red-600 p-2 rounded">Create Goal</button>
+                            <button className="bg-red-600 p-2 rounded" type="submit">Create Goal</button>
                         </div>
                     </form>
                 </div>
