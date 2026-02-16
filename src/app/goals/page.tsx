@@ -38,6 +38,7 @@ export default function Goals() {
                                     value={formData.title || ""}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                     className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                                    required
                                 />
                             </div>
                             <div className="p-3">
@@ -53,6 +54,7 @@ export default function Goals() {
                                     value={formData.description || ""}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     className="rounded min-h-6 text-black w-36 text-[13px]"
+                                    required
                                 />
                             </div>
                             <div className="p-3">
@@ -75,6 +77,7 @@ export default function Goals() {
                                     }
                                     onChange={(e) => setFormData({ ...formData, dueDate: e.target.value ? new Date(e.target.value) : undefined })}
                                     className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                    required
                                 />
                             </div>
                             <div className="p-3">
@@ -87,7 +90,7 @@ export default function Goals() {
                                     className="text-black text-[15px] p-0.5 rounded bg-white w-40"
                                     required
                                 >
-                                    <option value="">Choose one</option>
+                                    <option value="" disabled>Choose one</option>
                                     <option value="side-hustle">side-hustle</option>
                                     <option value="home">home</option>
                                     <option value="personal">personal</option>
@@ -105,6 +108,7 @@ export default function Goals() {
                                     onChange={(e) => setFormData({ ...formData, progress: Number(e.target.value) })}
                                     className="text-black text-[13px] p-0.5 rounded bg-white w-40"
                                     placeholder="0 - 100"
+                                    required
                                 />
                             </div>
                             <div className="p-3">
@@ -115,8 +119,9 @@ export default function Goals() {
                                     value={formData.status || ""}
                                     onChange={(e) => setFormData({ ...formData, status: e.target.value as "todo" | "in-progress" | "completed" })}
                                     className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                    required
                                 >
-                                    <option value="">Choose one</option>
+                                    <option value="" disabled>Choose one</option>
                                     <option value="todo">todo</option>
                                     <option value="in-progress">in-progress</option>
                                     <option value="completed">completed</option>
@@ -138,11 +143,11 @@ export default function Goals() {
                                                     setFormData({ ...formData, milestones: updatedMilestones });
                                                 }}
                                                 className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                                                required
                                             />
                                         </div>
                                         <div className="flex gap-4 items-center">
                                             <label>Completed?</label>
-
                                             <label className="flex items-center gap-1">
                                                 <input
                                                     type="radio"
@@ -154,6 +159,7 @@ export default function Goals() {
                                                         updatedMilestones[index].completed = true;
                                                         setFormData({ ...formData, milestones: updatedMilestones });
                                                     }}
+
                                                 />
                                                 Yes
                                             </label>
@@ -192,6 +198,7 @@ export default function Goals() {
                                                     setFormData({ ...formData, milestones: updatedMilestones });
                                                 }}
                                                 className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                                                required
                                             />
                                         </div>
                                     </div>
