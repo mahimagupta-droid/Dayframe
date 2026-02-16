@@ -277,7 +277,7 @@ export default function Tasks() {
     return (
         <div className="flex gap-10 justify-center items-center h-screen overflow-hidden">
             <section className="w-1/2 flex justify-center">
-                <div className="flex flex-col items-center w-[75%] rounded h-[80vh] overflow-y-auto p-4 border">
+                <div className="flex flex-col items-center w-[75%] rounded h-[80vh] overflow-y-auto p-4 border bg-neutral-900">
                     <div className="mt-10">
                         <h2 className="text-xl mb-4">Your Tasks</h2>
                         {taskData?.length === 0 ? (
@@ -297,13 +297,13 @@ export default function Tasks() {
                                 </div>
                             ))
                         )}
-
+                            </div>
+                        <div>
                     </div>
-                    <div></div>
                 </div>
             </section>
             <section className="w-1/2 flex justify-center">
-                <div className="flex flex-col items-center justify-center w-[75%] p-2 rounded border h-[80vh] overflow-y-auto">
+                <div className="flex flex-col items-center justify-center w-[75%] p-2 rounded border h-[80vh] overflow-y-auto bg-neutral-900">
                     <div className="text-2xl mb-5">Fill in the task</div>
                     <form
                         onSubmit={handleSubmit}

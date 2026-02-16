@@ -1,6 +1,6 @@
 "use client";
 import { GoalsTypes } from "@/lib/models/Goals";
-import { useState, ChangeEvent } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 export default function Goals() {
     const [formData, setFormData] = useState<Partial<GoalsTypes>>({
@@ -18,7 +18,7 @@ export default function Goals() {
         try {
             setLoading(true);
             const res = await fetch("/api/goals", {
-                method: "POST",
+                method: "P8OST",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -49,14 +49,14 @@ export default function Goals() {
     return (
         <div className="flex items-center justify-center h-screen w-full overflow-hidden gap-14 ml-4">
             <section className="w-1/2 p-2 h-[80vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
-                <div className="flex flex-col items-center justify-center w-[75%] border rounded">
+                <div className="flex flex-col items-center justify-center w-[75%] border rounded bg-neutral-900">
                     goals fetched data
                 </div>
             </section>
             <section className="w-1/2 p-2 h-[80vh] mr-4 flex justify-center">
-                <div className="w-[75%] border rounded flex flex-col">
+                <div className="w-[75%] border rounded flex flex-col bg-neutral-900">
                     <form className="rounded p-2 flex flex-col items-center overflow-y-auto h-full" onSubmit={handleSubmit}>
-                        <div>Fill the Goals here!</div>
+                        <div className="text-2xl underline">Fill the Goals here!</div>
                         <div>
                             <div className="p-3">
                                 <label
