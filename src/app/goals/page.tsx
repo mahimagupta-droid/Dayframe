@@ -18,7 +18,7 @@ export default function Goals() {
         try {
             setLoading(true);
             const res = await fetch("/api/goals", {
-                method: "P8OST",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -47,17 +47,25 @@ export default function Goals() {
     }
 
     return (
-        <div className="flex items-center justify-center h-screen w-full overflow-hidden gap-14 ml-9 mr-4">
-            <section className="w-1/2 p-2 h-[85vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none] mt-12">
-                <div className="flex flex-col items-center justify-center w-[75%] border rounded bg-neutral-900">
-                    goals fetched data
-                </div>
-            </section>
-            <section className="w-1/2 p-2 h-[85vh] mr-4 flex justify-center mt-12">
-                <div className="w-[75%] border rounded flex flex-col bg-neutral-900">
-                    <form className="rounded p-2 flex flex-col items-center overflow-y-auto h-full" onSubmit={handleSubmit}>
+        <div className="space-y-6">
+            <div className=" flex flex-col items-center justify-center bg-neutral-800 p-2 rounded mt-16">
+                <p className="text-xl font-bold">
+                    The big picture. Where do you want to be in 3 months? 6 months? This year? Set meaningful goals and track your progress over time.
+                </p>
+                <p className="text-end opacity-90">
+                    Goals are long-term achievements that require multiple steps. Break them down into milestones and watch your progress grow!
+                </p>
+            </div>
+            <div className="flex items-center justify-center w-full gap-2 ml-9 mr-4">
+                <section className="w-1/2 h-[84vh] overflow-y-auto">
+                    <div className="flex flex-col items-center justify-center w-[75%] border rounded bg-neutral-900">
+                        goals fetched data
+                    </div>
+                </section>
+                <section className="w-1/2 flex justify-center">
+                    <div className="flex flex-col items-center justify-center w-[75%] p-1 rounded border h-[84vh] overflow-y-auto bg-neutral-900">
                         <div className="text-2xl underline">Fill the Goals here!</div>
-                        <div>
+                        <form className="rounded p-2" onSubmit={handleSubmit}>
                             <div className="p-3">
                                 <label
                                     htmlFor="title"
@@ -237,14 +245,13 @@ export default function Goals() {
                                     </div>
                                 ))}
                             </div>
-
-                        </div>
-                        <div className="flex items-center justify-center mt-3">
-                            <button className="bg-red-600 p-2 rounded" type="submit">Create Goal</button>
-                        </div>
-                    </form>
-                </div>
-            </section>
+                            <div className="flex items-center justify-center mt-3">
+                                <button className="bg-red-600 p-2 rounded" type="submit">Create Goal</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
         </div>
     )
 }
