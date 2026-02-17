@@ -275,7 +275,7 @@ export default function Tasks() {
         )
     }
     return (
-        <div className="space-y-4"> 
+        <div className="space-y-4">
             <div className=" flex flex-col items-center justify-center bg-neutral-800 p-2 rounded">
                 <p className="text-xl font-bold">
                     Daily actions and to-dos that keep you moving forward. These are the small steps that add up to big wins. What needs to get done today?
@@ -284,9 +284,9 @@ export default function Tasks() {
                     Tasks are specific, actionable items with clear deadlines. Check them off as you complete them!
                 </p>
             </div>
-            <div className="flex gap-10 justify-center items-center overflow-hidden">
-                <section className="w-1/2 flex justify-center">
-                    <div className="flex flex-col items-center w-[75%] rounded h-[80vh] overflow-y-auto p-1 border bg-neutral-900">
+            <div className="flex gap-6 justify-center items-start px-4">
+                <section className="w-1/2 flex">
+                    <div className="flex flex-col items-center w-[75%] rounded h-[75vh] p-1 border bg-neutral-900 overflow-y-auto scrollbar-thin">
                         <div className="mt-10">
                             <h2 className="text-xl mb-4">Your Tasks</h2>
                             {taskData?.length === 0 ? (
@@ -312,7 +312,7 @@ export default function Tasks() {
                     </div>
                 </section>
                 <section className="w-1/2 flex justify-center">
-                    <div className="flex flex-col items-center justify-center w-[75%] p-1 rounded border h-[80vh] overflow-y-auto bg-neutral-900">
+                    <div className="flex flex-col items-center justify-center w-[75%] p-1 rounded border bg-neutral-900 overflow-y-auto scrollbar-thin">
                         <div className="text-2xl mb-5">Fill in the task</div>
                         <form
                             onSubmit={handleSubmit}

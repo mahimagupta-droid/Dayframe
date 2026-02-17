@@ -4,7 +4,6 @@ import {ClerkProvider} from "@clerk/nextjs"
 import { Lexend } from "next/font/google";
 import Navigation from "./separate-components/navigation";
 import {Toaster} from "react-hot-toast";
-// import ".../public/icon.png";
 export const metadata: Metadata = {
   title: "Dayframe",
   description: "Student Productivity and Life Goals Manager",
