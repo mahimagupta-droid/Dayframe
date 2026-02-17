@@ -13,7 +13,7 @@ export default function Goals() {
         ],
     });
     const [loading, setLoading] = useState(false);
-    const [isFetched, setIsFetched] = useState(false);
+    // const [isFetched, setIsFetched] = useState(false);
     const [fetchedData, setFetchedData] = useState<GoalsTypes[] | null>(null)
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -38,7 +38,7 @@ export default function Goals() {
                     ],
                 });
                 toast.success("Goal created successfully");
-                handleFetch();
+                await handleFetch();
             } else {
                 toast.error(data.error || "Failed to create goal");
             }
@@ -54,7 +54,6 @@ export default function Goals() {
             setLoading(true); // Renamed from setIsFetched for clarity
             const response = await fetch("/api/goals");
             const body = await response.json();
-
             if (response.ok && body.success) {
                 setFetchedData(body.goals);
             } else {
@@ -80,7 +79,7 @@ export default function Goals() {
                 toast.success("Clicked goal deleted successfully")
                 setFetchedData(null);
                 setFormData({});
-                handleFetch();
+                await handleFetch();
             } else {
                 toast.error("Error deleting clicked goal")
             }
@@ -92,9 +91,27 @@ export default function Goals() {
         }
     }
 
-    // const handleEdit = async () => {
-
-    // }
+    const handleEdit = async (id: string) => {
+        try {
+            setLoading(true);
+            const response = await fetch(`/api/goals/${id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            })
+            if(response.ok){
+                toast.success("Selected goal updated successfully!");
+                setFormData({});
+                await handleFetch();
+            }
+        } catch (error: any) {
+            toast.error(`Error: ${error.message}`);
+        } finally {
+            setLoading(false);
+        }
+    }
     console.log(setFetchedData)
     useEffect(() => {
         handleFetch()
@@ -115,16 +132,19 @@ export default function Goals() {
             </div>
             <div className="flex items-center justify-center w-full gap-2">
                 <section className="w-1/2 pt-6 pr-2 bg-neutral-900 h-[84vh] border">
-                    {fetchedData && fetchedData.length > 0 ? <div className="flex flex-col items-center justify-center w-[75%] border rounded bg-neutral-900">
+                    {fetchedData && fetchedData.length > 0 ? <div className="flex flex-col items-center justify-center w-[75%] rounded bg-neutral-900">
                         {fetchedData?.map((goal) => {
                             return (
-                                <div key={goal._id} className="border bg-white text-black p-3 m-2 w-40%">
+                                <div key={goal._id} className="bg-white text-black p-10 m-2 w-40%">
                                     <div>{goal.title}</div>
                                     <div>{goal.category}</div>
                                     <div>{goal.description}</div>
                                     <div>{new Date(goal.dueDate).toLocaleDateString()}</div>
                                     <div>{goal.status}</div>
-                                    <button onClick={() => goal._id && handleDelete(goal._id)}>Delete</button>
+                                    <div className="flex flex-col gap-y-1">
+                                        <button onClick={() => goal._id && handleDelete(goal._id)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2">Delete</button>
+                                    <button onClick={() => goal._id && handleEdit(goal._id)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2">Edit</button>
+                                    </div>
                                 </div>
                             )
                         })}
