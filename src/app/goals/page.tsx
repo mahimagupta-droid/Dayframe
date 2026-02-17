@@ -1,6 +1,6 @@
 "use client";
 import { GoalsTypes } from "@/lib/models/Goals";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 export default function Goals() {
     const [formData, setFormData] = useState<Partial<GoalsTypes>>({
@@ -13,6 +13,8 @@ export default function Goals() {
         ],
     });
     const [loading, setLoading] = useState(false);
+    const [isFetched, setIsFetched] = useState(false);
+    const [fetchedData, setFetchedData] = useState<GoalsTypes[] | null>(null)
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
@@ -36,6 +38,7 @@ export default function Goals() {
                     ],
                 });
                 toast.success("Goal created successfully");
+                handleFetch();
             } else {
                 toast.error(data.error || "Failed to create goal");
             }
@@ -46,9 +49,41 @@ export default function Goals() {
         }
     }
 
+    const handleFetch = async () => {
+        try {
+            setLoading(true); // Renamed from setIsFetched for clarity
+            const response = await fetch("/api/goals");
+            const body = await response.json();
+
+            if (response.ok && body.success) {
+                setFetchedData(body.goals);
+            } else {
+                // Use the error message sent from your GET route
+                const errorMsg = body.error || "Failed to fetch goals";
+                toast.error(errorMsg);
+                setFetchedData([]);
+            }
+        } catch (error: any) {
+            toast.error(`Network Error: ${error.message}`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // const handleDelete = async () => {
+
+    // }
+
+    // const handleEdit = async () => {
+
+    // }
+    console.log(setFetchedData)
+    useEffect(() => {
+        handleFetch()
+    }, [])
     return (
         <div className="space-y-6">
-            <div className=" flex flex-col items-center justify-center bg-neutral-800 p-2 rounded mt-16">
+            <div className=" flex flex-col items-center justify-center p-2 rounded mt-16">
                 <p className="text-xl font-bold">
                     The big picture. Where do you want to be in 3 months? 6 months? This year? Set meaningful goals and track your progress over time.
                 </p>
@@ -57,12 +92,22 @@ export default function Goals() {
                 </p>
             </div>
             <div className="flex items-center justify-center w-full gap-2 ml-9 mr-4">
-                <section className="w-1/2 h-[84vh] overflow-y-auto">
+                <section className="w-1/2 pt-6 pr-2">
                     <div className="flex flex-col items-center justify-center w-[75%] border rounded bg-neutral-900">
-                        goals fetched data
+                        {fetchedData?.map((goal) => {
+                            return (
+                                <div key={goal._id} className="border bg-white text-black p-3 m-2 w-40%">
+                                    <div>{goal.title}</div>
+                                    <div>{goal.category}</div>
+                                    <div>{goal.description}</div>
+                                    <div>{new Date(goal.dueDate).toLocaleDateString()}</div>
+                                    <div>{goal.status}</div>
+                                </div>
+                            )
+                        })}
                     </div>
                 </section>
-                <section className="w-1/2 flex justify-center">
+                <section className="w-1/2 flex justify-center mb-8">
                     <div className="flex flex-col items-center justify-center w-[75%] p-1 rounded border h-[84vh] overflow-y-auto bg-neutral-900">
                         <div className="text-2xl underline">Fill the Goals here!</div>
                         <form className="rounded p-2" onSubmit={handleSubmit}>
@@ -143,10 +188,10 @@ export default function Goals() {
                                 <label className="mr-5 font-medium">Progress (%)</label>
                                 <input
                                     type="number"
-                                    min="0"
+
                                     max="100"
                                     name="progress"
-                                    value={formData.progress || 0}
+                                    value={formData.progress}
                                     onChange={(e) => setFormData({ ...formData, progress: Number(e.target.value) })}
                                     className="text-black text-[13px] p-0.5 rounded bg-white w-40"
                                     placeholder="0 - 100"
@@ -246,7 +291,7 @@ export default function Goals() {
                                 ))}
                             </div>
                             <div className="flex items-center justify-center mt-3">
-                                <button className="bg-red-600 p-2 rounded" type="submit">Create Goal</button>
+                                {loading ? <button className="bg-green-600 p-2 rounded cursor-not-allowed opacity-50">Creating Goal</button> : <button className="bg-red-600 p-2 rounded cursor-pointer hover:bg-green-600 transition-colors" type="submit">Create Goal</button>}
                             </div>
                         </form>
                     </div>

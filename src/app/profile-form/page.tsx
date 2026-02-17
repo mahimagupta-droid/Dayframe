@@ -106,7 +106,7 @@ export default function ProfileForm() {
 
     if (isEditing) {
         return (
-            <div className="flex items-center justify-center min-h-screen p-4">
+            <div className="flex items-center justify-center min-h-screen p-4 overflow-hidden">
                 <div className="w-full max-w-md">
                     <h1 className="text-2xl text-center mb-5 font-lexend">Edit user details</h1>
                     <form action="POST" className="border p-6 space-y-5" onSubmit={handleEdit}>

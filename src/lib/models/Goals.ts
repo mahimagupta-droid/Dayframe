@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 export type GoalsTypes = {
+  _id?: string;
   clerkId: string; 
   title: string;
   description: string;

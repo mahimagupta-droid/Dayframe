@@ -37,15 +37,7 @@ export async function POST(request: NextRequest) {
         body[field] = undefined;
       }
     });
-    const {
-      title,
-      description,
-      dueDate,
-      category,
-      progress,
-      status,
-      milestones,
-    } = body;
+    const { title, description, dueDate, category, progress, status, milestones } = body;
     const newGoal = await Goals.create({
       clerkId: userId,
       title,
@@ -68,29 +60,24 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     const { userId } = await auth();
-    if (!userId)
+    if (!userId) {
       return NextResponse.json(
-        { message: "User unauthorised" },
-        { status: 401 },
+        { success: false, error: "User unauthorised" }, // Added success: false
+        { status: 401 }
       );
-    await dbConnect();
-    const reqBody = await Goals.findOne({ clerkId: userId });
-    if (reqBody) {
-      return NextResponse.json({
-        success: true,
-        goals: reqBody,
-      });
-    } else {
-      return NextResponse.json({
-        success: false,
-        status: 404,
-      });
     }
+
+    await dbConnect();
+    const userGoals = await Goals.find({ clerkId: userId });
+
+    return NextResponse.json({
+      success: true,
+      goals: userGoals || [], // Ensure it returns empty array if none found
+    });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: error.message }, 
+      { status: 500 }
+    );
   }
 }
-
-// export async function DELETE() {
-  
-// }

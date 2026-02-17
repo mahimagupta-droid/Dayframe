@@ -276,7 +276,7 @@ export default function Tasks() {
     }
     return (
         <div className="space-y-4">
-            <div className=" flex flex-col items-center justify-center bg-neutral-800 p-2 rounded">
+            <div className=" flex flex-col items-center justify-center p-2 rounded">
                 <p className="text-xl font-bold">
                     Daily actions and to-dos that keep you moving forward. These are the small steps that add up to big wins. What needs to get done today?
                 </p>
