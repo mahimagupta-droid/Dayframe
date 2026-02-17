@@ -64,15 +64,33 @@ export default function Goals() {
                 setFetchedData([]);
             }
         } catch (error: any) {
-            toast.error(`Network Error: ${error.message}`);
+            toast.error(`Error: ${error.message}`);
         } finally {
             setLoading(false);
         }
     };
 
-    // const handleDelete = async () => {
+    const handleDelete = async (id: string) => {
+        try {
+            setLoading(true);
+            const response = await fetch(`/api/goals/${id}`, {
+                method: "DELETE"
+            });
+            if (response.ok) {
+                toast.success("Clicked goal deleted successfully")
+                setFetchedData(null);
+                setFormData({});
+                handleFetch();
+            } else {
+                toast.error("Error deleting clicked goal")
+            }
 
-    // }
+        } catch (error: any) {
+            toast.error(`Error: ${error.message}`);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     // const handleEdit = async () => {
 
@@ -81,6 +99,10 @@ export default function Goals() {
     useEffect(() => {
         handleFetch()
     }, [])
+
+    // if(setFetchedData === null) {
+
+    // }
     return (
         <div className="space-y-6">
             <div className=" flex flex-col items-center justify-center p-2 rounded mt-16">
@@ -91,9 +113,9 @@ export default function Goals() {
                     Goals are long-term achievements that require multiple steps. Break them down into milestones and watch your progress grow!
                 </p>
             </div>
-            <div className="flex items-center justify-center w-full gap-2 ml-9 mr-4">
-                <section className="w-1/2 pt-6 pr-2">
-                    <div className="flex flex-col items-center justify-center w-[75%] border rounded bg-neutral-900">
+            <div className="flex items-center justify-center w-full gap-2">
+                <section className="w-1/2 pt-6 pr-2 bg-neutral-900 h-[84vh] border">
+                    {fetchedData && fetchedData.length > 0 ? <div className="flex flex-col items-center justify-center w-[75%] border rounded bg-neutral-900">
                         {fetchedData?.map((goal) => {
                             return (
                                 <div key={goal._id} className="border bg-white text-black p-3 m-2 w-40%">
@@ -102,10 +124,11 @@ export default function Goals() {
                                     <div>{goal.description}</div>
                                     <div>{new Date(goal.dueDate).toLocaleDateString()}</div>
                                     <div>{goal.status}</div>
+                                    <button onClick={() => goal._id && handleDelete(goal._id)}>Delete</button>
                                 </div>
                             )
                         })}
-                    </div>
+                    </div> : <div className="text-3xl">No goals entered yet</div>}
                 </section>
                 <section className="w-1/2 flex justify-center mb-8">
                     <div className="flex flex-col items-center justify-center w-[75%] p-1 rounded border h-[84vh] overflow-y-auto bg-neutral-900">

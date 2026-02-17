@@ -1,0 +1,43 @@
+import { dbConnect } from "@/lib/dbConnections/dbConnect";
+import { Goals } from "@/lib/models/Goals";
+import { auth } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+
+export async function DELETE(
+    req: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    try {
+        const { userId } = await auth();
+        if (!userId)
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+        await dbConnect();
+        const { id } = await params;
+        if (!id)
+            return NextResponse.json(
+                { message: `Goal (id-${id}) not found!` },
+                { status: 404 }
+            );
+        const response = await Goals.findByIdAndDelete(id);
+        if (!response) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Clicked goal not deleted...",
+                },
+                { status: 404 } // Set status to 404 or 400 so response.ok is false on client
+            );
+        }
+        return NextResponse.json({
+            success: true,
+            message: "Clicked Goal Deleted Successfully!",
+        });
+    } catch (error) {
+        console.log("Error deleting goal:", error);
+        return NextResponse.json(
+            { message: "Error deleting goal" },
+            { status: 500 }
+        );
+    }
+}

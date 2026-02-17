@@ -105,12 +105,12 @@ export default function Tasks() {
                 method: "DELETE"
             })
             if (response.ok) {
-                toast.success("User profile deleted successfully!")
+                toast.success("Task deleted successfully!")
                 setSubmitData({});
                 setTaskData(null);
                 handleFetch();
             } else {
-                toast.error("Error deleting task profile")
+                toast.error("Error deleting task")
             }
         } catch (error: any) {
             console.log(error.message)
