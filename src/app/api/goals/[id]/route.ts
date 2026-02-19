@@ -53,7 +53,7 @@ export async function POST(request: NextRequest, {params} : {params: Promise<{id
         await dbConnect();
         const reqBody = await request.json();
         const {id} = await params;
-        const updatedGoal = await Goals.updateOne(
+        const updatedGoal = await Goals.findOneAndUpdate(
             {clerkId: userId, _id: id},
             {...reqBody},
             {new: true}
