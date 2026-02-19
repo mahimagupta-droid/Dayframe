@@ -19,7 +19,10 @@ export async function DELETE(
                 { message: `Goal (id-${id}) not found!` },
                 { status: 404 }
             );
-        const response = await Goals.findByIdAndDelete(id);
+        const response = await Goals.deleteOne({
+            clerkId: userId,
+            _id: id
+        })
         if (!response) {
             return NextResponse.json(
                 {
@@ -50,8 +53,8 @@ export async function POST(request: NextRequest, {params} : {params: Promise<{id
         await dbConnect();
         const reqBody = await request.json();
         const {id} = await params;
-        const updatedGoal = await Goals.findByIdAndUpdate(
-            id,
+        const updatedGoal = await Goals.updateOne(
+            {clerkId: userId, _id: id},
             {...reqBody},
             {new: true}
         );

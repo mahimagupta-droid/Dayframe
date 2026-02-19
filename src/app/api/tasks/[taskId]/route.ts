@@ -12,14 +12,13 @@ export async function PUT(
         if (!userId) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }
-
         const { taskId } = await context.params;
         const body = await request.json();
 
         await dbConnect();
 
-        const updatedTask = await Tasks.findByIdAndUpdate(
-            taskId,
+        const updatedTask = await Tasks.findOneAndUpdate(
+            { clerkId: userId, _id: taskId },
             { ...body },
             { new: true }
         );
@@ -44,12 +43,11 @@ export async function DELETE(
         if (!userId) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }
-
         const { taskId } = await context.params;
 
         await dbConnect();
 
-        const deletedTask = await Tasks.findByIdAndDelete(taskId);
+        const deletedTask = await Tasks.findOneAndDelete({ clerkId: userId, _id: taskId });
 
         if (!deletedTask) {
             return NextResponse.json({ message: "Task not found" }, { status: 404 });
