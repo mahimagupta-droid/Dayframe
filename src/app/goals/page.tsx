@@ -13,8 +13,10 @@ export default function Goals() {
             },
         ],
     });
-    const [loading, setLoading] = useState(false);
     const [fetchedData, setFetchedData] = useState<GoalsTypes[] | null>(null)
+    const [loading, setLoading] = useState(false);
+    const [editing, setEditing] = useState(false);
+    const [deleting, setDeleting] = useState(false);
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
@@ -71,7 +73,7 @@ export default function Goals() {
 
     const handleDelete = async (id: string) => {
         try {
-            setLoading(true);
+            setDeleting(true);
             const response = await fetch(`/api/goals/${id}`, {
                 method: "DELETE"
             });
@@ -87,13 +89,13 @@ export default function Goals() {
         } catch (error: any) {
             toast.error(`Error: ${error.message}`);
         } finally {
-            setLoading(false);
+            setDeleting(false);
         }
     }
 
     const handleEdit = async (id: string) => {
         try {
-            setLoading(true);
+            setEditing(true);
             const response = await fetch(`/api/goals/${id}`, {
                 method: "POST",
                 headers: {
@@ -101,7 +103,7 @@ export default function Goals() {
                 },
                 body: JSON.stringify(formData),
             })
-            if(response.ok){
+            if (response.ok) {
                 toast.success("Selected goal updated successfully!");
                 setFormData({});
                 await handleFetch();
@@ -109,10 +111,10 @@ export default function Goals() {
         } catch (error: any) {
             toast.error(`Error: ${error.message}`);
         } finally {
-            setLoading(false);
+            setEditing(false);
         }
     }
-    
+
     useEffect(() => {
         handleFetch()
     }, [])
@@ -139,8 +141,8 @@ export default function Goals() {
                                     <div>{new Date(goal.dueDate).toLocaleDateString()}</div>
                                     <div>{goal.status}</div>
                                     <div className="flex flex-col gap-y-1">
-                                        <button onClick={() => goal._id && handleDelete(goal._id)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2">Delete</button>
-                                    <button onClick={() => goal._id && handleEdit(goal._id)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2">Edit</button>
+                                        {deleting ? <button className="hover:bg-green-600 opacity-50 cursor-not-allowed">Deleting</button> : <button onClick={() => goal._id && handleDelete(goal._id)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2">Delete</button>}
+                                        {editing ? <button className="hover:bg-green-600 opacity-50 cursor-not-allowed">Editing</button> : <button onClick={() => goal._id && handleEdit(goal._id)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2">Edit</button>}
                                     </div>
                                 </div>
                             )

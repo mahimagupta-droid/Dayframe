@@ -8,14 +8,14 @@ import toast from "react-hot-toast";
 export default function Tasks() {
     const [submitData, setSubmitData] = useState<Partial<TasksTypes>>({});
     const [deleteLoading, setDeleteLoading] = useState(false);
-    const [taskData, setTaskData] = useState<TasksTypes[] | null>(null)
-    const [isEditing, setIsEditing] = useState(false)
+    const [taskData, setTaskData] = useState<TasksTypes[] | null>(null);
     const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false)
-
+    const [editing, setEditing] = useState(false);
+    const [deleting, setDeleting] = useState(false);
     const handleEditClick = (task: TasksTypes) => {
         console.log("Clicked Edit. Task:", task);
-        setIsEditing(true);
+        setEditing(true);
         setSubmitData(task);
         if (task) {
             console.log("Setting submitData to:", task);
@@ -73,7 +73,7 @@ export default function Tasks() {
         if (!editingTaskId) return;
         try {
             setLoading(true);
-            setIsEditing(true);
+            setEditing(true);
             const response = await fetch(`/api/tasks/${editingTaskId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -90,8 +90,7 @@ export default function Tasks() {
         } catch (error: any) {
             toast.error(`Error: ${error.message}`)
         } finally {
-            setIsEditing(false)
-            setLoading(false)
+            setEditing(false)
             setEditingTaskId(null);
             setSubmitData({});
         }
@@ -99,7 +98,7 @@ export default function Tasks() {
 
     const handleDelete = async (id: string) => {
         try {
-            setDeleteLoading(true);
+            setDeleting(true);
             const response = await fetch(`/api/tasks/${id}`, {
                 method: "DELETE"
             })
@@ -115,15 +114,15 @@ export default function Tasks() {
             console.log(error.message)
             toast.error(error.message)
         } finally {
-            setDeleteLoading(false)
+            setDeleting(false)
         }
     }
-    
+
     useEffect(() => {
         handleFetch();
     }, [])
 
-    if (isEditing) {
+    if (editing) {
         return (
             <div className="flex items-center justify-center h-screen w-full overflow-hidden">
                 <div className="flex flex-col items-center justify-center w-[75%] p-2 rounded">
@@ -265,7 +264,7 @@ export default function Tasks() {
                             <button
                                 type="button"
                                 className="bg-red-600 hover:bg-green-500 transition p-2 rounded"
-                                onClick={() => setIsEditing(false)}>
+                                onClick={() => setEditing(false)}>
                                 Cancel
                             </button>
                         </div>
@@ -299,10 +298,12 @@ export default function Tasks() {
                                             <p>{task.description || "No description provided"}</p>
                                             <p>Status: {task.status}</p>
                                         </div>
-                                        <button onClick={() => handleEditClick(task)} className="bg-red-700 p-2 m-3 cursor-pointer rounded">Edit</button>
+                                        {deleting ? <button className="hover:bg-green-600 opacity-50 cursor-not-allowed">Deleting</button> : <button onClick={() => task._id && handleDelete(task._id)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2">Delete</button>}
+                                        {editing ? <button className="hover:bg-green-600 opacity-50 cursor-not-allowed">Editing</button> : <button onClick={() => task._id && handleEdit()} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2">Edit</button>}
+                                        {/* <button onClick={() => handleEditClick(task)} className="bg-red-700 p-2 m-3 cursor-pointer rounded">Edit</button>
                                         {deleteLoading ? <button className="bg-red-700 cursor-not-allowed opacity-80 mx-auto block p-2">Adding Task...</button> : <button className="hover:bg-green-600 bg-red-700 p-2 m-3 cursor-pointer rounded"
                                             onClick={() => handleDelete(task._id)}>Delete</button>}
-                                        {/* <button onClick={() => handleDelete(task._id)} className="bg-red-700 p-2 m-3 cursor-pointer rounded">Delete</button> */}
+                                        <button onClick={() => handleDelete(task._id)} className="bg-red-700 p-2 m-3 cursor-pointer rounded">Delete</button> */}
                                     </div>
                                 ))
                             )}
