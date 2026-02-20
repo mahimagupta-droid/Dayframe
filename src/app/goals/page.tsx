@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { GoalsTypes } from "@/lib/models/Goals";
 import { useEffect, useState } from "react";
@@ -13,7 +14,6 @@ export default function Goals() {
         ],
     });
     const [loading, setLoading] = useState(false);
-    // const [isFetched, setIsFetched] = useState(false);
     const [fetchedData, setFetchedData] = useState<GoalsTypes[] | null>(null)
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -112,14 +112,11 @@ export default function Goals() {
             setLoading(false);
         }
     }
-    console.log(setFetchedData)
+    
     useEffect(() => {
         handleFetch()
     }, [])
 
-    // if(setFetchedData === null) {
-
-    // }
     return (
         <div className="space-y-6">
             <div className=" flex flex-col items-center justify-center p-2 rounded mt-16">

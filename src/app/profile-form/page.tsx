@@ -75,7 +75,8 @@ export default function ProfileForm() {
         }
     }
 
-    const handleEdit = async () => {
+    const handleEdit = async (e: React.FormEvent) => {
+        e.preventDefault();
         try {
             setIsEditing(true);
             const response = await fetch("/api/user", {
@@ -92,14 +93,13 @@ export default function ProfileForm() {
                 toast.error("Error updating user profile")
             }
         } catch (error: any) {
-            setIsEditing(false);
             console.log(error.message)
             toast.error(error.message)
         } finally {
             setIsEditing(false);
         }
     }
-    
+
     useEffect(() => {
         handleFetch();
     }, [])

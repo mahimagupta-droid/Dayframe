@@ -59,9 +59,8 @@ export default function Tasks() {
             });
             if (getResponse.ok) {
                 const responseBody = await getResponse.json();
-                setTaskData(responseBody.tasks)
-                toast.success("success fetching data")
-                console.log(getResponse)
+                setTaskData(responseBody.tasks);
+                console.log("success fetching data");
             }
         } catch (error: any) {
             toast.error(`Error: ${error.message}`)
@@ -119,6 +118,7 @@ export default function Tasks() {
             setDeleteLoading(false)
         }
     }
+    
     useEffect(() => {
         handleFetch();
     }, [])
