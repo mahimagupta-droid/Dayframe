@@ -4,7 +4,7 @@ export default async function Home() {
   const { userId } = await auth();
   if (!userId) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-4xl italic">
+      <div className="flex items-center justify-center min-h-screen text-4xl italic flex-col">
         <div className="underline pointer-events-auto z-50">
           Dayframe -  Student Productivity and Life Manager
         </div>
