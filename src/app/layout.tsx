@@ -4,8 +4,6 @@ import { ClerkProvider } from "@clerk/nextjs"
 import { Lexend } from "next/font/google";
 import Navigation from "./separate-components/navigation";
 import { Toaster } from "react-hot-toast";
-import { DottedGlowBackground } from "@/components/ui/dotted-glow-background";
-import { BoxesCore } from "@/components/ui/background-boxes";
 import BackgroundBoxesDemo from "@/components/background-boxes-demo";
 export const metadata: Metadata = {
   title: "Dayframe",
