@@ -4,7 +4,6 @@ import { ClerkProvider } from "@clerk/nextjs"
 import { Lexend } from "next/font/google";
 import Navigation from "./separate-components/navigation";
 import { Toaster } from "react-hot-toast";
-import BackgroundBoxesDemo from "@/components/background-boxes-demo";
 export const metadata: Metadata = {
   title: "Dayframe",
   description: "Student Productivity and Life Goals Manager",
@@ -29,9 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="relative z-10 flex flex-col min-h-screen">
             <Navigation />
             <main className="flex-grow min-h-screen">
-              <BackgroundBoxesDemo>
-                {children}
-              </BackgroundBoxesDemo>
+              {children}
               <Toaster position="top-center" />
             </main>
           </div>
