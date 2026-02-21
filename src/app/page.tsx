@@ -1,22 +1,22 @@
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 export default async function Home() {
-  const {userId} = await auth();
-  if(!userId){
+  const { userId } = await auth();
+  if (!userId) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-4xl italic">
-       <div className="underline">
-         Dayframe -  Student Productivity and Life Manager
-       </div>
-        <Link href='/profile-form'>
-          <div className="text-2xl mt-12 not-italic bg-slate-800 p-4 rounded-xl border-slate-800 opacity-80">Please login to continue</div>
+      <div className="flex items-center justify-center min-h-screen text-4xl italic">
+        <div className="underline pointer-events-auto z-50">
+          Dayframe -  Student Productivity and Life Manager
+        </div>
+        <Link href='/profile-form' className="pointer-events-auto z-50">
+          <div className="text-2xl mt-12 not-italic bg-slate-800 p-4 rounded-xl border-slate-800 opacity-80 transition-opacity hover:opacity-100">Please login to continue</div>
         </Link>
-    </div>
+      </div>
     )
   }
   return (
     <div className="flex items-center justify-center min-h-screen text-4xl italic">
-        Dayframe -  Student Productivity and Life Manager
+      <div className="pointer-events-auto z-50">Dayframe -  Student Productivity and Life Manager</div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 export default function GoalsLayout({children}: {children: React.ReactNode;}) {
   return (
       
-        <div className="flex flex-col items-center justify-center min-h-full bg-neutral-1000 text-white"> 
+<div className="min-h-[calc(100vh-64px)] bg-black text-white">
           {children}
         </div>  
   );

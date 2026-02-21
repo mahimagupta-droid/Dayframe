@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import {ClerkProvider} from "@clerk/nextjs"
+import { ClerkProvider } from "@clerk/nextjs"
 import { Lexend } from "next/font/google";
 import Navigation from "./separate-components/navigation";
-import {Toaster} from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+import { DottedGlowBackground } from "@/components/ui/dotted-glow-background";
+import { BoxesCore } from "@/components/ui/background-boxes";
+import BackgroundBoxesDemo from "@/components/background-boxes-demo";
 export const metadata: Metadata = {
   title: "Dayframe",
   description: "Student Productivity and Life Goals Manager",
@@ -24,12 +27,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${lexend.variable} bg-black text-white`} suppressHydrationWarning>
-          <Navigation/>
-          <main className="min-h-[calc(100vh-64px)]">
-            {children}
-            <Toaster position="top-center"/>
-          </main>
+        <body className={`${lexend.variable} bg-black text-white relative`} suppressHydrationWarning>
+          <div className="relative z-10 flex flex-col min-h-screen">
+            <Navigation />
+            <main className="flex-grow min-h-screen">
+              <BackgroundBoxesDemo>
+                {children}
+              </BackgroundBoxesDemo>
+              <Toaster position="top-center" />
+            </main>
+          </div>
         </body>
       </html>
     </ClerkProvider>

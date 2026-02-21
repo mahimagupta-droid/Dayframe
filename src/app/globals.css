@@ -15,8 +15,8 @@ body {
   --radius: 0.625rem;
   
   /* Background: #1f271b (Dark Green) overrides oklch(1 0 0) */
-  --background: #1f271b; 
-  --foreground: #f3fcf0; /* Using --main-text color for foreground */
+  --background: #000000; 
+  /* --foreground: #f3fcf0; Using --main-text color for foreground */
 
   /* Card: #ee4266 (Red/Pink) */
   --card: #ee4266;
@@ -94,15 +94,4 @@ body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  
-  html, body {
-    @apply bg-background text-foreground;
-    overflow-x: hidden;
-  }
 }
