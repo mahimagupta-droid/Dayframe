@@ -1,7 +1,10 @@
-export default function Dashboard(){
+import DashboardClient from "@/components/dashboardClient";
+
+export default  function Dashboard(){
+    
     return (
-        <div className="flex items-center justify-center min-h-screen">
-            Dashboard
+        <div>
+            <DashboardClient />
         </div>
     )
 }
