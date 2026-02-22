@@ -7,9 +7,11 @@ import { TasksTypes } from "@/lib/models/Tasks";
 import { UserType } from "@/lib/models/Users";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import Link from "next/link";
 export default function DashboardClient() {
     console.log("Dashboard mounted");
     const [userData, setUserData] = useState<UserType | null>(null);
+    const [hasProfile, setHasProfile] = useState<boolean | null>(null);
     const [tasks, setTasks] = useState<TasksTypes[]>([])
     const [goals, setGoals] = useState<GoalsTypes[]>([])
     const [loading, setLoading] = useState(false);
@@ -19,14 +21,17 @@ export default function DashboardClient() {
             const response = await fetch("/api/user", {
                 method: "GET"
             });
-            if (response.ok) {
-                const body = await response.json();
-                if (body.success && body.user) {
-                    setUserData(body.user)
-                }
+            const body = await response.json();
+            if (response.ok && body.success && body.user) {
+                setUserData(body.user);
+                setHasProfile(true);
+            } else {
+                setHasProfile(false);
             }
         } catch (error: any) {
-            toast.error(`Error: ${error.message}`)
+            console.error("Failed to fetch user profile", error);
+            setHasProfile(false);
+            toast.error(`Error: ${error.message}`);
         }
     }
 
@@ -89,7 +94,7 @@ export default function DashboardClient() {
     }
 
     const getTodaysTasks = () => {
-        const today = new Date().setHours(0, 0, 0, 0); // Reset time to midnight;
+        const today = new Date().setHours(0, 0, 0, 0);
         return tasks.filter((task) => {
             const deadline = new Date(task.deadline).setHours(0, 0, 0, 0);
             return deadline == today;
@@ -127,13 +132,11 @@ export default function DashboardClient() {
         "Small steps. Every single day.",
         "Consistency > Motivation.",
         "Do it tired. Do it bored. Just do it.",
-        // "“Your future self is watching.”",
         "Debug your life like your code.",
         "Focus. Finish. Repeat.",
         "Progress over perfection.",
         "Stop scrolling. Start building.",
         "Be obsessed or be average.",
-        // "Healing and hustling can coexist.",
         "Keep going, quietly."
     ];
     const getMotivationQuotes = () => {
@@ -154,18 +157,30 @@ export default function DashboardClient() {
         fetchAllData();
         setQuote(getMotivationQuotes());
     }, [])
-    if (loading) {
+    if (loading || hasProfile === null) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
             </div>
         );
     };
+
+    if (hasProfile === false) {
+        return (
+            <div className="flex min-h-screen flex-col items-center justify-center space-y-4 bg-black">
+                <p className="text-2xl font-bold text-white">Please create a user profile first!</p>
+                <Link href="/profile-form" className="bg-white text-black px-4 py-2 rounded font-medium hover:bg-neutral-200 transition-colors">
+                    Go to Profile Form
+                </Link>
+            </div>
+        );
+    }
+
     return (
         <div className=" bg-black p-6">
-<div className="w-full space-y-8">
+            <div className="w-full space-y-8">
                 <div className="space-y-2 mt-16">
-                    <h1 className="text-4xl font-bold text-white">
+                    <h1 className="text-4xl font-bold text-white text-2xl md:text-4xl font-bold text-center md:text-left">
                         {getGreeting()}, {userData?.name || "Student"}!
                     </h1>
                     <h2 className="p-5 text-lg">{getMotivationQuotes()}</h2>
@@ -275,8 +290,8 @@ export default function DashboardClient() {
                                     <div className="w-full bg-gray-700 rounded-full h-3">
                                         <div
                                             className={`h-3 rounded-full transition-all ${goal.progress >= 80 ? 'bg-green-500' :
-                                                    goal.progress >= 50 ? 'bg-yellow-500' :
-                                                        'bg-red-500'
+                                                goal.progress >= 50 ? 'bg-yellow-500' :
+                                                    'bg-red-500'
                                                 }`}
                                             style={{ width: `${goal.progress}%` }}
                                         />
@@ -286,8 +301,8 @@ export default function DashboardClient() {
                                             Due: {new Date(goal.dueDate).toLocaleDateString()}
                                         </span>
                                         <span className={`px-2 py-1 rounded text-xs ${goal.status === 'completed' ? 'bg-green-500/20 text-green-400' :
-                                                goal.status === 'in-progress' ? 'bg-blue-500/20 text-blue-400' :
-                                                    'bg-gray-500/20 text-gray-400'
+                                            goal.status === 'in-progress' ? 'bg-blue-500/20 text-blue-400' :
+                                                'bg-gray-500/20 text-gray-400'
                                             }`}>
                                             {goal.status}
                                         </span>

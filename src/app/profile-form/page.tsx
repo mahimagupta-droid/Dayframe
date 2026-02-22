@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { UserType } from "@/lib/models/Users";
 import toast from "react-hot-toast";
+import {User2Icon, Check, Trash, Send, Save, X} from "lucide-react"
 export default function ProfileForm() {
     const [user, setUser] = useState<UserType | null>(null);
     const [loading, setLoading] = useState(false);
@@ -198,13 +199,13 @@ export default function ProfileForm() {
                             <button
                                 type="submit"
                                 className="bg-red-600 hover:bg-green-500 transition p-2 rounded">
-                                Update
+                                <Check />
                             </button>
                             <button
                                 type="button"
                                 className="bg-red-600 hover:bg-green-500 transition p-2 rounded"
                                 onClick={() => setIsEditing(false)}>
-                                Cancel
+                               <X />
                             </button>
                         </div>
                     </form>
@@ -225,7 +226,10 @@ export default function ProfileForm() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen p-4">
                 <div className="space-y-2 p-5 border rounded w-full max-w-md">
-                    <p>User Profile</p>
+                    <div className="flex flex-row space-x-4 items-center justify-center text-3xl">
+                        <User2Icon />
+                        <p>User Profile</p>
+                    </div>
                     <p>Name: {user.name}</p>
                     <p>Email: {user.email}</p>
                     <p>Age: {user.age}</p>
@@ -236,13 +240,13 @@ export default function ProfileForm() {
                         className="bg-red-600 hover:bg-green-500 transition p-2 rounded"
                         onClick={() => setIsEditing(true)}
                     >
-                        Edit
+                       <Save />
                     </button>
                     <button
                         className="bg-red-600 hover:bg-green-500 transition p-2 rounded"
                         onClick={handleDelete}
                     >
-                        Delete
+                        <Trash />
                     </button>
                 </div>
             </div>
@@ -340,7 +344,7 @@ export default function ProfileForm() {
                     </div>
                     <div className="flex justify-center">
                         <button className="text-center bg-red-600 rounded text-white font-lexend px-8 py-2 cursor-pointer hover:bg-green-600 transition-colors" type="submit">
-                            {loading ? "Submitting..." : "Submit"}
+                            {loading ? <div className="flex flex-row gap-x-2"><Send /> Submitting...</div> : <div className="flex flex-row gap-x-2"><Send /> Submit</div>}
                         </button>
                     </div>
                 </form>

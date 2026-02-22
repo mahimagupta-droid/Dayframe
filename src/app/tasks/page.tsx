@@ -2,10 +2,13 @@
 "use client";
 
 import { TasksTypes } from "@/lib/models/Tasks";
+import { Check, Plus, Trash, X } from "lucide-react";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 export default function Tasks() {
+    const [hasProfile, setHasProfile] = useState<boolean | null>(null);
     const [submitData, setSubmitData] = useState<Partial<TasksTypes>>({});
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [taskData, setTaskData] = useState<TasksTypes[] | null>(null);
@@ -13,41 +16,37 @@ export default function Tasks() {
     const [loading, setLoading] = useState(false)
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
-    const handleEditClick = (task: TasksTypes) => {
-        console.log("Clicked Edit. Task:", task);
-        setEditing(true);
-        setSubmitData(task);
-        if (task) {
-            console.log("Setting submitData to:", task);
-        }
-        setEditingTaskId(task._id);
-    }
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true);
+
+        // Determine if we are updating an existing task or creating a new one
+        const isUpdating = !!submitData._id;
+        const url = isUpdating ? `/api/tasks/${submitData._id}` : "/api/tasks";
+        const method = isUpdating ? "PUT" : "POST";
+
         try {
-            setLoading(true);
-            console.log("Submitting task data:", submitData);
-            const response = await fetch("/api/tasks", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+            const response = await fetch(url, {
+                method: method,
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(submitData)
-            })
+            });
+
             if (response.ok) {
-                toast.success("successfully created the task...");
-                console.log(response)
+                toast.success(isUpdating ? "Task updated!" : "Task created!");
                 setSubmitData({});
+                setEditing(false);
                 await handleFetch();
             } else {
-                toast.error("error creating the task")
+                toast.error("Failed to save task");
             }
         } catch (error: any) {
-            toast.error(`Error: ${error.message}`)
+            toast.error(`Error: ${error.message}`);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     const handleFetch = async () => {
         try {
@@ -66,33 +65,6 @@ export default function Tasks() {
             toast.error(`Error: ${error.message}`)
         } finally {
             setLoading(false)
-        }
-    }
-
-    const handleEdit = async () => {
-        if (!editingTaskId) return;
-        try {
-            setLoading(true);
-            setEditing(true);
-            const response = await fetch(`/api/tasks/${editingTaskId}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(submitData)
-            });
-            if (response.ok) {
-                toast.success("successfully edited the task...");
-                console.log(response)
-                setSubmitData({});
-                await handleFetch();
-            } else {
-                toast.error("error updating the task")
-            }
-        } catch (error: any) {
-            toast.error(`Error: ${error.message}`)
-        } finally {
-            setEditing(false)
-            setEditingTaskId(null);
-            setSubmitData({});
         }
     }
 
@@ -118,17 +90,48 @@ export default function Tasks() {
         }
     }
 
+    const checkProfileAndFetchTasks = async () => {
+        try {
+            const res = await fetch("/api/user");
+            const data = await res.json();
+            if (data.success) {
+                setHasProfile(true);
+                await handleFetch();
+            } else {
+                setHasProfile(false);
+            }
+        } catch (error) {
+            console.error("Failed to check user profile", error);
+            setHasProfile(false);
+        }
+    };
+
     useEffect(() => {
-        handleFetch();
+        checkProfileAndFetchTasks();
     }, [])
+
+    if (hasProfile === null) {
+        return <div className="flex h-[84vh] items-center justify-center text-xl">Loading...</div>;
+    }
+
+    if (hasProfile === false) {
+        return (
+            <div className="flex h-[84vh] flex-col items-center justify-center space-y-4">
+                <p className="text-2xl font-bold">Please create a user profile first!</p>
+                <Link href="/profile-form" className="bg-white text-black px-4 py-2 rounded font-medium hover:bg-neutral-200 transition-colors">
+                    Go to Profile Form
+                </Link>
+            </div>
+        );
+    }
 
     if (editing) {
         return (
-            <div className="flex items-center justify-center h-screen w-full overflow-hidden">
-                <div className="flex flex-col items-center justify-center w-[75%] p-2 rounded">
+            <div className="flex items-center justify-center h-screen overflow-hidden mt-10">
+                <div className="flex flex-col items-center justify-center w-[75%] p-2 rounded bg-card border">
                     <div className="text-2xl mb-5">Edit task</div>
                     <form
-                        onSubmit={handleEdit}
+                        onSubmit={handleFormSubmit}
                         className="rounded p-2 space-y-3"
                     >
                         <div className="p-3">
@@ -259,13 +262,13 @@ export default function Tasks() {
                             <button
                                 type="submit"
                                 className="bg-red-600 hover:bg-green-500 transition p-2 rounded">
-                                Update
+                                <Check />
                             </button>
                             <button
                                 type="button"
                                 className="bg-red-600 hover:bg-green-500 transition p-2 rounded"
                                 onClick={() => setEditing(false)}>
-                                Cancel
+                                <X />
                             </button>
                         </div>
                     </form>
@@ -274,7 +277,7 @@ export default function Tasks() {
         )
     }
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 mt-20">
             <div className=" flex flex-col items-center justify-center p-2 rounded">
                 <p className="text-xl font-bold">
                     Daily actions and to-dos that keep you moving forward. These are the small steps that add up to big wins. What needs to get done today?
@@ -283,27 +286,37 @@ export default function Tasks() {
                     Tasks are specific, actionable items with clear deadlines. Check them off as you complete them!
                 </p>
             </div>
-            <div className="flex gap-6 justify-center items-start px-4">
-                <section className="w-1/2 flex">
-                    <div className="flex flex-col items-center w-[75%] rounded h-[75vh] p-1 border bg-neutral-900 overflow-y-auto scrollbar-thin">
+            <div className="flex flex-col lg:flex-row gap-6 justify-center items-center lg:items-start px-4 w-full">
+                <section className="w-full lg:w-1/2 flex">
+                    <div className="flex flex-col items-center w-full lg:w-[75%] rounded h-[75vh] p-1 border bg-card overflow-y-auto scrollbar-thin">
                         <div className="mt-10">
                             <h2 className="text-xl mb-4">Your Tasks</h2>
                             {taskData?.length === 0 ? (
                                 <p>No tasks found</p>
                             ) : (
                                 taskData?.map((task, index) => (
-                                    <div key={index} className="flex">
+                                    <div key={index} className="flex flex-col">
                                         <div className="border p-3 mb-2 rounded">
                                             <h3 className="font-bold">{task.title}</h3>
                                             <p>{task.description || "No description provided"}</p>
                                             <p>Status: {task.status}</p>
                                         </div>
-                                        {deleting ? <button className="hover:bg-green-600 opacity-50 cursor-not-allowed">Deleting</button> : <button onClick={() => task._id && handleDelete(task._id)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2">Delete</button>}
-                                        {editing ? <button className="hover:bg-green-600 opacity-50 cursor-not-allowed">Editing</button> : <button onClick={() => task._id && handleEdit()} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2">Edit</button>}
-                                        {/* <button onClick={() => handleEditClick(task)} className="bg-red-700 p-2 m-3 cursor-pointer rounded">Edit</button>
-                                        {deleteLoading ? <button className="bg-red-700 cursor-not-allowed opacity-80 mx-auto block p-2">Adding Task...</button> : <button className="hover:bg-green-600 bg-red-700 p-2 m-3 cursor-pointer rounded"
-                                            onClick={() => handleDelete(task._id)}>Delete</button>}
-                                        <button onClick={() => handleDelete(task._id)} className="bg-red-700 p-2 m-3 cursor-pointer rounded">Delete</button> */}
+                                        <div className="flex flex-row gap-y-1 items-center justify-center gap-4 mt-2">
+                                            {deleting ? <button className="hover:bg-green-600 opacity-50 cursor-not-allowed"><Trash /></button> : <button onClick={() => task._id && handleDelete(task._id)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2"><Trash /></button>}
+                                            {editing ? (
+                                                <button className="opacity-50 cursor-not-allowed"><Check /></button>
+                                            ) : (
+                                                <button
+                                                    onClick={() => {
+                                                        setSubmitData(task);
+                                                        setEditing(true);
+                                                    }}
+                                                    className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2"
+                                                >
+                                                    <Check />
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 ))
                             )}
@@ -312,11 +325,11 @@ export default function Tasks() {
                         </div>
                     </div>
                 </section>
-                <section className="w-1/2 flex justify-center">
-                    <div className="flex flex-col items-center justify-center w-[75%] p-1 rounded border bg-neutral-900 overflow-y-auto scrollbar-thin">
+                <section className="w-full lg:w-1/2 flex justify-center">
+                    <div className="flex flex-col items-center justify-center w-full lg:w-[75%] p-1 rounded border bg-card overflow-y-auto scrollbar-thin">
                         <div className="text-2xl mb-5">Fill in the task</div>
                         <form
-                            onSubmit={handleSubmit}
+                            onSubmit={handleFormSubmit}
                             className="rounded p-2"
                         >
                             <div className="p-3">
@@ -340,7 +353,11 @@ export default function Tasks() {
                                     name="deadline"
                                     required
                                     className="text-black text-[15px] p-0.5 rounded bg-white w-40"
-                                    value={submitData?.deadline instanceof Date ? submitData.deadline.toISOString().split('T')[0] : ''}
+                                    value={
+                                        submitData?.deadline
+                                            ? new Date(submitData.deadline).toISOString().split("T")[0]
+                                            : ""
+                                    }
                                     onChange={(e) => setSubmitData({ ...submitData, deadline: new Date(e.target.value) })}
                                 />
                             </div>
@@ -438,7 +455,7 @@ export default function Tasks() {
                                 </select>
                             </div>
                             {loading ? <button className="bg-red-700 cursor-not-allowed opacity-80 mx-auto block p-2">Adding Task...</button> : <button className="bg-red-600 hover:bg-green-600 transition p-2 rounded mx-auto block"
-                                type="submit">Add Task</button>}
+                                type="submit"><Plus /></button>}
                         </form>
                     </div>
                 </section >
