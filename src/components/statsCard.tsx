@@ -1,17 +1,17 @@
-import { Icon } from "next/dist/lib/metadata/types/metadata-types"
+import { LucideIcon } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 type StatsCardTypes = {
-    title: string,
-    value: number,
-    icon: Icon,
-    color: string,
-     change?: string;
+  title: string,
+  value: number,
+  icon: LucideIcon,
+  color: string,
+  change?: string;
   changeType?: 'positive' | 'negative';
   gradient: string;
 }
 
-export default function StatsCard({ title, value,  icon, color, change, changeType, gradient }: StatsCardTypes) {
-     return (
+export default function StatsCard({ title, value, icon: Icon, color, change, changeType, gradient }: StatsCardTypes) {
+  return (
     <Card className="bg-gray-900/50 border-gray-800 backdrop-blur-sm hover:border-gray-700 transition-all overflow-hidden relative group">
       <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-gradient-to-br ${gradient}`} />
       <CardContent className="p-6 relative">
@@ -21,12 +21,10 @@ export default function StatsCard({ title, value,  icon, color, change, changeTy
             <p className="text-4xl font-bold text-white mb-2">{value}</p>
             {change && (
               <div className="flex items-center gap-2">
-                <div className={`h-1.5 w-1.5 rounded-full ${
-                  changeType === 'positive' ? 'bg-green-400' : 'bg-red-400'
-                } animate-pulse`} />
-                <p className={`text-xs font-medium ${
-                  changeType === 'positive' ? 'text-green-400' : 'text-red-400'
-                }`}>
+                <div className={`h-1.5 w-1.5 rounded-full ${changeType === 'positive' ? 'bg-green-400' : 'bg-red-400'
+                  } animate-pulse`} />
+                <p className={`text-xs font-medium ${changeType === 'positive' ? 'text-green-400' : 'text-red-400'
+                  }`}>
                   {change}
                 </p>
               </div>
