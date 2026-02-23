@@ -10,9 +10,7 @@ import toast from "react-hot-toast";
 export default function Tasks() {
     const [hasProfile, setHasProfile] = useState<boolean | null>(null);
     const [submitData, setSubmitData] = useState<Partial<TasksTypes>>({});
-    const [deleteLoading, setDeleteLoading] = useState(false);
     const [taskData, setTaskData] = useState<TasksTypes[] | null>(null);
-    const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false)
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -141,7 +139,7 @@ export default function Tasks() {
                                 id="edit-title"
                                 name="title"
                                 required
-                                className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="eg. complete assignments"
                                 value={submitData?.title}
                                 onChange={(e) => setSubmitData({ ...submitData, title: e.target.value })}
@@ -154,7 +152,7 @@ export default function Tasks() {
                                 id="edit-deadline"
                                 name="deadline"
                                 required
-                                className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 value={
                                     submitData?.deadline
                                         ? new Date(submitData.deadline).toISOString().split("T")[0]
@@ -170,7 +168,7 @@ export default function Tasks() {
                             <select
                                 name="priority"
                                 id="edit-priority"
-                                className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                                 value={submitData?.priority}
                                 onChange={(e) => setSubmitData({ ...submitData, priority: e.target.value as "high" | "medium" | "low" })}
@@ -186,7 +184,7 @@ export default function Tasks() {
                             <select
                                 name="difficulty"
                                 id="edit-difficulty"
-                                className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                                 value={submitData?.difficulty}
                                 onChange={(e) => setSubmitData({ ...submitData, difficulty: e.target.value as "hard" | "medium" | "easy" })}
@@ -202,7 +200,7 @@ export default function Tasks() {
                             <select
                                 name="timeRequired"
                                 id="edit-timeRequired"
-                                className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                                 value={submitData?.timeRequired}
                                 onChange={(e) => setSubmitData({ ...submitData, timeRequired: e.target.value as "long" | "medium" | "short" })}
@@ -218,7 +216,7 @@ export default function Tasks() {
                             <textarea
                                 name="description"
                                 id="edit-description"
-                                className="rounded min-h-6 text-black w-36 text-[13px] border bg-gray-50"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="physics, maths"
                                 required
                                 value={submitData?.description || ""}
@@ -230,7 +228,7 @@ export default function Tasks() {
                             <select
                                 name="category"
                                 id="edit-category"
-                                className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                                 value={submitData?.category}
                                 onChange={(e) => setSubmitData({ ...submitData, category: e.target.value as "side-hustle" | "home" | "personal" | "school" })}
@@ -247,7 +245,7 @@ export default function Tasks() {
                             <select
                                 name="status"
                                 id="edit-status"
-                                className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                                 value={submitData?.status || ''}
                                 onChange={(e) => setSubmitData({ ...submitData, status: e.target.value as "todo" | "in-progress" | "completed" })}
@@ -296,10 +294,43 @@ export default function Tasks() {
                             ) : (
                                 taskData?.map((task, index) => (
                                     <div key={index} className="flex flex-col">
-                                        <div className="border p-3 mb-2 rounded">
-                                            <h3 className="font-bold">{task.title}</h3>
-                                            <p>{task.description || "No description provided"}</p>
-                                            <p>Status: {task.status}</p>
+                                        <div className="bg-gray-900/40 backdrop-blur-sm border border-gray-800 rounded-xl p-4 mb-4       hover:border-gray-600 hover:-translate-y-1 hover:shadow-lg transition-all duration-200">
+                                            <h3 className="text-lg font-semibold text-white mb-1">
+                                                {task.title}
+                                            </h3>
+                                            <p className="text-sm text-gray-400 mb-2">
+                                                {task.description || "No description provided"}
+                                            </p>
+                                            <div className="flex items-center justify-between text-sm text-gray-400">
+                                                <span>{task.category}</span>
+                                                <span>
+                                                    {task.deadline
+                                                        ? new Date(task.deadline).toLocaleDateString()
+                                                        : "No deadline"}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center justify-between mt-3">
+                                                <span
+                                                    className={`px-3 py-1 text-xs rounded-full 
+                                                                ${task.status === "completed" ? "bg-green-500/20 text-green-400"
+                                                            :
+                                                            task.status === "in-progress" ? "bg-blue-500/20 text-blue-400" : "bg-gray-500/20 text-gray-400"
+                                                        }`}
+                                                >
+                                                    {task.status}
+                                                </span>
+                                                <span
+                                                    className={`px-3 py-1 text-xs rounded-full   
+                                                        ${task.priority === "high"
+                                                            ? "bg-red-500/20 text-red-400"
+                                                            : task.priority === "medium"
+                                                                ? "bg-yellow-500/20 text-yellow-400"
+                                                                : "bg-green-500/20 text-green-400"
+                                                        }`}
+                                                >
+                                                    {task.priority}
+                                                </span>
+                                            </div>
                                         </div>
                                         <div className="flex flex-row gap-y-1 items-center justify-center gap-4 mt-2">
                                             {deleting ? <button className="hover:bg-green-600 opacity-50 cursor-not-allowed"><Trash /></button> : <button onClick={() => task._id && handleDelete(task._id)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2"><Trash /></button>}
@@ -339,7 +370,7 @@ export default function Tasks() {
                                     id="title"
                                     name="title"
                                     required
-                                    className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                                    className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="eg. complete assignments"
                                     value={submitData?.title}
                                     onChange={(e) => setSubmitData({ ...submitData, title: e.target.value })}
@@ -352,7 +383,7 @@ export default function Tasks() {
                                     id="deadline"
                                     name="deadline"
                                     required
-                                    className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                    className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     value={
                                         submitData?.deadline
                                             ? new Date(submitData.deadline).toISOString().split("T")[0]
@@ -366,7 +397,7 @@ export default function Tasks() {
                                 <select
                                     name="priority"
                                     id="priority"
-                                    className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                    className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required
                                     value={submitData?.priority || ""}
                                     onChange={(e) => setSubmitData({ ...submitData, priority: e.target.value as "high" | "medium" | "low" })}
@@ -382,7 +413,7 @@ export default function Tasks() {
                                 <select
                                     name="difficulty"
                                     id="difficulty"
-                                    className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                    className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required
                                     value={submitData?.difficulty || ""}
                                     onChange={(e) => setSubmitData({ ...submitData, difficulty: e.target.value as "hard" | "medium" | "easy" })}
@@ -398,7 +429,7 @@ export default function Tasks() {
                                 <select
                                     name="timeRequired"
                                     id="timeRequired"
-                                    className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                    className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required
                                     value={submitData?.timeRequired || ""}
                                     onChange={(e) => setSubmitData({ ...submitData, timeRequired: e.target.value as "long" | "medium" | "short" })}
@@ -414,7 +445,7 @@ export default function Tasks() {
                                 <textarea
                                     name="description"
                                     id="description"
-                                    className="rounded min-h-6 text-black w-36 text-[13px]"
+                                    className="rounded min-h-6 text-[13px] text-black w-full max-w-sm p-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="physics, maths"
                                     required
                                     value={submitData?.description}
@@ -426,7 +457,7 @@ export default function Tasks() {
                                 <select
                                     name="category"
                                     id="category"
-                                    className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                    className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required
                                     value={submitData?.category || ""}
                                     onChange={(e) => setSubmitData({ ...submitData, category: e.target.value as "side-hustle" | "home" | "personal" | "school" })}
@@ -443,7 +474,7 @@ export default function Tasks() {
                                 <select
                                     name="status"
                                     id="status"
-                                    className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                    className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required
                                     value={submitData?.status || ''}
                                     onChange={(e) => setSubmitData({ ...submitData, status: e.target.value as "todo" | "in-progress" | "completed" })}

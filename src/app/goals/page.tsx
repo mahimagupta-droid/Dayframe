@@ -151,7 +151,7 @@ export default function Goals() {
                         <div className="p-3">
                             <label
                                 htmlFor="title"
-                                className="mr-12"
+                                className="mr-12 text-textSecondary"
                             >
                                 Title:
                             </label>
@@ -161,7 +161,7 @@ export default function Goals() {
                                 id="title"
                                 value={formData.title || ""}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             />
                         </div>
@@ -177,7 +177,7 @@ export default function Goals() {
                                 id="description"
                                 value={formData.description || ""}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                className="rounded min-h-6 text-black w-36 text-[13px]"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             />
                         </div>
@@ -200,7 +200,7 @@ export default function Goals() {
                                         : ""
                                 }
                                 onChange={(e) => setFormData({ ...formData, dueDate: e.target.value ? new Date(e.target.value) : undefined })}
-                                className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             />
                         </div>
@@ -211,7 +211,7 @@ export default function Goals() {
                                 id="category"
                                 value={formData.category || ""}
                                 onChange={(e) => setFormData({ ...formData, category: e.target.value as "side-hustle" | "home" | "personal" | "school" })}
-                                className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             >
                                 <option value="" disabled>Choose one</option>
@@ -230,7 +230,7 @@ export default function Goals() {
                                 name="progress"
                                 value={formData.progress}
                                 onChange={(e) => setFormData({ ...formData, progress: Number(e.target.value) })}
-                                className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder="0 - 100"
                                 required
                             />
@@ -242,7 +242,7 @@ export default function Goals() {
                                 id="status"
                                 value={formData.status || ""}
                                 onChange={(e) => setFormData({ ...formData, status: e.target.value as "todo" | "in-progress" | "completed" })}
-                                className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 required
                             >
                                 <option value="" disabled>Choose one</option>
@@ -266,7 +266,7 @@ export default function Goals() {
                                                 updatedMilestones[index].title = e.target.value;
                                                 setFormData({ ...formData, milestones: updatedMilestones });
                                             }}
-                                            className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                                            className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             required
                                         />
                                     </div>
@@ -347,15 +347,37 @@ export default function Goals() {
             </div>
             <div className="flex flex-col lg:flex-row gap-6 justify-center items-center lg:items-start px-4 w-full">
                 <section className="w-full lg:w-1/2 pt-6 pr-2 bg-card h-[84vh] border">
-                    {fetchedData && fetchedData.length > 0 ? <div className="flex flex-col items-center justify-center w-[75%]">
+                    {fetchedData && fetchedData.length > 0 ? <div className="flex flex-col w-full max-w-xl mx-auto">
                         {fetchedData?.map((goal) => {
                             return (
-                                <div key={goal._id} className="text-white p-5 m-2 w-40% border">
-                                    <div>{goal.title}</div>
-                                    <div>{goal.category}</div>
-                                    <div>{goal.description}</div>
-                                    <div>{new Date(goal.dueDate).toLocaleDateString()}</div>
-                                    <div>{goal.status}</div>
+                                <div
+                                    key={goal._id}
+                                    className="w-full bg-gray-900/40 backdrop-blur-sm border border-gray-800 rounded-xl p-5 mb-4 hover:border-gray-600 hover:-translate-y-1 hover:shadow-lg transition-all duration-200 flex flex-col justify-center items-center"
+                                >
+                                    <h3 className="text-lg font-semibold text-white mb-1">
+                                        {goal.title}
+                                    </h3>
+
+                                    <p className="text-sm text-gray-400 mb-2">
+                                        {goal.description}
+                                    </p>
+
+                                    <div className="flex items-center justify-between text-sm text-gray-400">
+                                        <span>{goal.category}</span>
+                                        <span>{new Date(goal.dueDate).toLocaleDateString()}</span>
+                                    </div>
+
+                                    <div className="mt-2">
+                                        <span
+                                            className={`px-3 py-1 text-xs rounded-full ${goal.status === "completed"
+                                                    ? "bg-green-500/20 text-green-400"
+                                                    : goal.status === "in-progress"
+                                                        ? "bg-blue-500/20 text-blue-400"
+                                                        : "bg-gray-500/20 text-gray-400"}`}
+                                        >
+                                            {goal.status}
+                                        </span>
+                                    </div>
                                     <div className="flex flex-row gap-y-1 items-center justify-center gap-4 mt-2">
                                         {deleting ? <button className="hover:bg-green-600 opacity-50 cursor-not-allowed"><X /></button> : <button onClick={() => goal._id && handleDelete(goal._id)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2"><X /></button>}
                                         {editing ? <button className="hover:bg-green-600 opacity-50 cursor-not-allowed"><Save /></button> : <button onClick={() => startEditing(goal)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2"><Save /></button>}
@@ -365,7 +387,7 @@ export default function Goals() {
                         })}
                     </div> : <div className="text-3xl">No goals entered yet</div>}
                 </section>
-                <section className="w-full lg:w-1/2 flex justify-center mb-8">
+                <section className="w-full lg:w-1/2 flex justify-center">
                     <div className="flex flex-col items-center justify-center w-full lg:w-[75%] p-1 rounded border h-[84vh] overflow-y-auto bg-card">
                         <div className="text-2xl underline">Fill the Goals here!</div>
                         <form className="rounded p-2" onSubmit={handleSubmit}>
@@ -382,7 +404,7 @@ export default function Goals() {
                                     id="title"
                                     value={formData.title || ""}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                                    className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required
                                 />
                             </div>
@@ -398,7 +420,7 @@ export default function Goals() {
                                     id="description"
                                     value={formData.description || ""}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="rounded min-h-6 text-black w-36 text-[13px]"
+                                    className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required
                                 />
                             </div>
@@ -421,7 +443,7 @@ export default function Goals() {
                                             : ""
                                     }
                                     onChange={(e) => setFormData({ ...formData, dueDate: e.target.value ? new Date(e.target.value) : undefined })}
-                                    className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                    className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required
                                 />
                             </div>
@@ -432,7 +454,7 @@ export default function Goals() {
                                     id="category"
                                     value={formData.category || ""}
                                     onChange={(e) => setFormData({ ...formData, category: e.target.value as "side-hustle" | "home" | "personal" | "school" })}
-                                    className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                    className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required
                                 >
                                     <option value="" disabled>Choose one</option>
@@ -451,7 +473,7 @@ export default function Goals() {
                                     name="progress"
                                     value={formData.progress}
                                     onChange={(e) => setFormData({ ...formData, progress: Number(e.target.value) })}
-                                    className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                                    className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="0 - 100"
                                     required
                                 />
@@ -463,7 +485,7 @@ export default function Goals() {
                                     id="status"
                                     value={formData.status || ""}
                                     onChange={(e) => setFormData({ ...formData, status: e.target.value as "todo" | "in-progress" | "completed" })}
-                                    className="text-black text-[15px] p-0.5 rounded bg-white w-40"
+                                    className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     required
                                 >
                                     <option value="" disabled>Choose one</option>
@@ -487,7 +509,7 @@ export default function Goals() {
                                                     updatedMilestones[index].title = e.target.value;
                                                     setFormData({ ...formData, milestones: updatedMilestones });
                                                 }}
-                                                className="text-black text-[13px] p-0.5 rounded bg-white w-40"
+                                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 required
                                             />
                                         </div>

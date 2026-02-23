@@ -122,7 +122,7 @@ export default function ProfileForm() {
                                 id="email"
                                 name="email"
                                 required
-                                className="text-black text-[15px] p-0.5 rounded w-48"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 value={formData?.email || ""}
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value } as UserType)}
                             />
@@ -138,7 +138,7 @@ export default function ProfileForm() {
                                 id="name"
                                 name="name"
                                 required
-                                className="text-black text-[15px] p-0.5 rounded w-48"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 value={formData?.name || ""}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value } as UserType)}
                             />
@@ -154,7 +154,7 @@ export default function ProfileForm() {
                                 id="age"
                                 name="age"
                                 required
-                                className="text-black text-[15px] p-0.5 rounded w-48"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 value={formData?.age || ""}
                                 onChange={(e) => setFormData({ ...formData, age: Number(e.target.value) } as UserType)}
                             />
@@ -170,7 +170,7 @@ export default function ProfileForm() {
                                 id="educationLevel"
                                 name="educationLevel"
                                 required
-                                className="text-black text-[15px] p-0.5 rounded w-48"
+                                className="text-black w-full max-w-sm p-2 rounded bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 value={formData?.educationLevel || "selectOne"}
                                 onChange={(e) => setFormData({ ...formData, educationLevel: e.target.value } as UserType)}
                             >

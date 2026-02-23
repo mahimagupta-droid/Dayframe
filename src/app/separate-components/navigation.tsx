@@ -7,16 +7,15 @@ export default function Navigation() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     return (
         <>
-            <nav className="fixed top-0 z-50 h-16 w-full border-b bg-black text-white">
+            <nav className="fixed top-0 z-[100] h-16 w-full border-b bg-black text-white">
                 <div className="mx-auto flex h-full items-center justify-between px-6">
                     <Link href="/" className="cursor-pointer">
                         <div className="flex items-center">
-                            <span className="text-2xl font-semibold tracking-wide ml-4">
+                            <span className="text-2xl font-semibold tracking-wide ml-4 z-30">
                                 Dayframe
                             </span>
                         </div>
                     </Link>
-
                     <div className="flex items-center gap-6 mr-4">
                         <div className="hidden md:flex items-center gap-6">
                             <NavLink href="/">Home</NavLink>
@@ -49,9 +48,8 @@ export default function Navigation() {
                 </div>
             </nav>
             {isMenuOpen && (
-                <div className="fixed top-16 left-0 w-full bg-black border-t border-gray-800 z-40 md:hidden">
+                <div className="fixed top-16 left-0 w-full bg-black border-t border-gray-800 z-[100] md:hidden">
                     <div className="flex flex-col p-4 space-y-2">
-                        {/* Navigation Links */}
                         <MobileNavLink
                             href="/"
                             onClick={() => setIsMenuOpen(false)}
@@ -82,11 +80,7 @@ export default function Navigation() {
                         >
                             Profile Form
                         </MobileNavLink>
-
-                        {/* Divider */}
                         <div className="border-t border-gray-700 my-2" />
-
-                        {/* Auth Section - THIS IS YOUR "LAST TWO OPTIONS" */}
                         <SignedOut>
                             <Link
                                 href="/profile-form"

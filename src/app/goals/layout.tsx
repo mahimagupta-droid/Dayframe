@@ -1,8 +1,7 @@
-export default function GoalsLayout({children}: {children: React.ReactNode;}) {
+export default function GoalsLayout({ children }: { children: React.ReactNode; }) {
   return (
-      
-<div className="min-h-[calc(100vh-64px)] bg-black text-white">
-          {children}
-        </div>  
+    <div className="min-h-[calc(100vh-64px)] bg-black text-white">
+      {children}
+    </div>
   );
 }
