@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { UserType } from "@/lib/models/Users";
 import toast from "react-hot-toast";
-import {User2Icon, Check, Trash, Send, Save, X} from "lucide-react"
+import { User2Icon, Check, Trash, Send, Save, X } from "lucide-react"
+import ToolTip from "@/components/tootTip";
 export default function ProfileForm() {
     const [user, setUser] = useState<UserType | null>(null);
     const [loading, setLoading] = useState(false);
@@ -196,17 +197,21 @@ export default function ProfileForm() {
                             </select>
                         </div>
                         <div className="flex items-center justify-center gap-4">
-                            <button
-                                type="submit"
-                                className="bg-red-600 hover:bg-green-500 transition p-2 rounded">
-                                <Check />
-                            </button>
-                            <button
-                                type="button"
-                                className="bg-red-600 hover:bg-green-500 transition p-2 rounded"
-                                onClick={() => setIsEditing(false)}>
-                               <X />
-                            </button>
+                            <ToolTip text="Save Changes">
+                                <button
+                                    type="submit"
+                                    className="bg-accent hover:bg-highlight transition p-2 rounded">
+                                    <Check />
+                                </button>
+                            </ToolTip>
+                            <ToolTip text="Cancel">
+                                <button
+                                    type="button"
+                                    className="bg-accent hover:bg-highlight transition p-2 rounded"
+                                    onClick={() => setIsEditing(false)}>
+                                    <X />
+                                </button>
+                            </ToolTip>
                         </div>
                     </form>
                 </div>
@@ -236,18 +241,22 @@ export default function ProfileForm() {
                     <p>Education Level: {user.educationLevel}</p>
                 </div>
                 <div className="flex items-center justify-center gap-4 mt-5">
-                    <button
-                        className="bg-red-600 hover:bg-green-500 transition p-2 rounded"
-                        onClick={() => setIsEditing(true)}
-                    >
-                       <Save />
-                    </button>
-                    <button
-                        className="bg-red-600 hover:bg-green-500 transition p-2 rounded"
-                        onClick={handleDelete}
-                    >
-                        <Trash />
-                    </button>
+                    <ToolTip text="Edit Profile">
+                        <button
+                            className="bg-accent hover:bg-highlight transition p-2 rounded"
+                            onClick={() => setIsEditing(true)}
+                        >
+                            <Save />
+                        </button>
+                    </ToolTip>
+                    <ToolTip text="Delete Profile">
+                        <button
+                            className="bg-accent hover:bg-highlight transition p-2 rounded"
+                            onClick={handleDelete}
+                        >
+                            <Trash />
+                        </button>
+                    </ToolTip>
                 </div>
             </div>
         )
@@ -343,9 +352,11 @@ export default function ProfileForm() {
                         />
                     </div>
                     <div className="flex justify-center">
-                        <button className="text-center bg-red-600 rounded text-white font-lexend px-8 py-2 cursor-pointer hover:bg-green-600 transition-colors" type="submit">
-                            {loading ? <div className="flex flex-row gap-x-2"><Send /> Submitting...</div> : <div className="flex flex-row gap-x-2"><Send /> Submit</div>}
-                        </button>
+                        <ToolTip text="Submit Registration">
+                            <button className="text-center bg-red-600 rounded text-white font-lexend px-8 py-2 cursor-pointer hover:bg-green-600 transition-colors" type="submit">
+                                {loading ? <div className="flex flex-row gap-x-2"><Send /> Submitting...</div> : <div className="flex flex-row gap-x-2"><Send /> Submit</div>}
+                            </button>
+                        </ToolTip>
                     </div>
                 </form>
             </div>

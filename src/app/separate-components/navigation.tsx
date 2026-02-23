@@ -1,8 +1,11 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
+import ToolTip from "@/components/tootTip";
+
 export default function Navigation() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     return (
@@ -24,13 +27,15 @@ export default function Navigation() {
                             <NavLink href="/goals">Goals</NavLink>
                             <NavLink href="/profile-form">Profile Form</NavLink>
                         </div>
-                        <button
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="md:hidden p-2 hover:bg-gray-800 rounded transition-colors"
-                            aria-label="Toggle menu"
-                        >
-                            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                        </button>
+                        <ToolTip text="Toggle Menu">
+                            <button
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                className="md:hidden p-2 hover:bg-gray-800 rounded transition-colors"
+                                aria-label="Toggle menu"
+                            >
+                                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                            </button>
+                        </ToolTip>
                         <div className="hidden md:flex items-center gap-4">
                             <SignedOut>
                                 <Link
@@ -112,12 +117,16 @@ function NavLink({
     href: string;
     children: React.ReactNode;
 }) {
+    const pathname = usePathname();
+    const isActive = pathname === href;
+
     return (
         <Link
             href={href}
-            className="relative text-sm font-medium text-gray-300 transition hover:text-white
-                 after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0
-                 after:bg-blue-600 after:transition-all hover:after:w-full"
+            className={`relative text-sm font-medium transition-all after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:bg-blue-600 after:transition-all ${isActive
+                    ? "text-white after:w-full"
+                    : "text-gray-300 hover:text-white after:w-0 hover:after:w-full"
+                }`}
         >
             {children}
         </Link>
@@ -133,11 +142,17 @@ function MobileNavLink({
     onClick: () => void;
     children: React.ReactNode;
 }) {
+    const pathname = usePathname();
+    const isActive = pathname === href;
+
     return (
         <Link
             href={href}
             onClick={onClick}
-            className="block py-3 px-4 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+            className={`block py-3 px-4 text-base font-medium rounded-lg transition-colors ${isActive
+                    ? "text-white bg-gray-800"
+                    : "text-gray-300 hover:text-white hover:bg-gray-800"
+                }`}
         >
             {children}
         </Link>

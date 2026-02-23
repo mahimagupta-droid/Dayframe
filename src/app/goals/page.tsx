@@ -4,6 +4,7 @@ import { GoalsTypes } from "@/lib/models/Goals";
 import { Plus, Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import ToolTip from "@/components/tootTip";
 export default function Goals() {
     const [formData, setFormData] = useState<Partial<GoalsTypes>>({
         milestones: [
@@ -168,7 +169,7 @@ export default function Goals() {
                         <div className="p-3">
                             <label
                                 htmlFor="description"
-                                className="mr-12"
+                                className="mr-12 text-textSecondary"
                             >
                                 Description
                             </label>
@@ -184,7 +185,7 @@ export default function Goals() {
                         <div className="p-3">
                             <label
                                 htmlFor="dueDate"
-                                className="mr-12"
+                                className="mr-12 text-textSecondary"
                             >
                                 Due Date
                             </label>
@@ -205,7 +206,7 @@ export default function Goals() {
                             />
                         </div>
                         <div className="p-3">
-                            <label htmlFor="category" className="mr-5">Category</label>
+                            <label htmlFor="category" className="mr-5 text-textSecondary">Category</label>
                             <select
                                 name="category"
                                 id="category"
@@ -222,7 +223,7 @@ export default function Goals() {
                             </select>
                         </div>
                         <div className="p-3">
-                            <label className="mr-5 font-medium">Progress (%)</label>
+                            <label className="mr-5 font-medium text-textSecondary">Progress (%)</label>
                             <input
                                 type="number"
 
@@ -236,7 +237,7 @@ export default function Goals() {
                             />
                         </div>
                         <div className="p-3">
-                            <label htmlFor="status" className="mr-5">Status</label>
+                            <label htmlFor="status" className="mr-5 text-textSecondary">Status</label>
                             <select
                                 name="status"
                                 id="status"
@@ -252,7 +253,7 @@ export default function Goals() {
                             </select>
                         </div>
                         <div className="p-3">
-                            <p className="font-medium mb-2">Create Milestone</p>
+                            <p className="font-medium mb-2 text-textSecondary">Create Milestone</p>
 
                             {formData.milestones?.map((milestone, index) => (
                                 <div key={index} className="border p-3 rounded space-y-3">
@@ -328,7 +329,9 @@ export default function Goals() {
                             ))}
                         </div>
                         <div className="flex items-center justify-center mt-3">
-                            {loading ? <button className="bg-green-600 p-2 rounded cursor-not-allowed opacity-50">Editing Goal</button> : <button className="bg-red-600 p-2 rounded cursor-pointer hover:bg-green-600 transition-colors" type="submit"><Plus /></button>}
+                            <ToolTip text="Save Changes">
+                                {loading ? <button className="bg-highlight p-2 rounded cursor-not-allowed opacity-50">Editing Goal</button> : <button className="bg-accent p-2 rounded cursor-pointer hover:bg-highlight transition-colors" type="submit"><Plus /></button>}
+                            </ToolTip>
                         </div>
                     </form>
                 </div>
@@ -346,7 +349,7 @@ export default function Goals() {
                 </p>
             </div>
             <div className="flex flex-col lg:flex-row gap-6 justify-center items-center lg:items-start px-4 w-full">
-                <section className="w-full lg:w-1/2 pt-6 pr-2 bg-card h-[84vh] border">
+                <section className="w-full lg:w-1/2 pt-6 pr-2 bg-card border-borderPrimary flex-1 overflow-y-auto">
                     {fetchedData && fetchedData.length > 0 ? <div className="flex flex-col w-full max-w-xl mx-auto">
                         {fetchedData?.map((goal) => {
                             return (
@@ -370,31 +373,35 @@ export default function Goals() {
                                     <div className="mt-2">
                                         <span
                                             className={`px-3 py-1 text-xs rounded-full ${goal.status === "completed"
-                                                    ? "bg-green-500/20 text-green-400"
-                                                    : goal.status === "in-progress"
-                                                        ? "bg-blue-500/20 text-blue-400"
-                                                        : "bg-gray-500/20 text-gray-400"}`}
+                                                ? "bg-green-500/20 text-green-400"
+                                                : goal.status === "in-progress"
+                                                    ? "bg-blue-500/20 text-blue-400"
+                                                    : "bg-gray-500/20 text-gray-400"}`}
                                         >
                                             {goal.status}
                                         </span>
                                     </div>
                                     <div className="flex flex-row gap-y-1 items-center justify-center gap-4 mt-2">
-                                        {deleting ? <button className="hover:bg-green-600 opacity-50 cursor-not-allowed"><X /></button> : <button onClick={() => goal._id && handleDelete(goal._id)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2"><X /></button>}
-                                        {editing ? <button className="hover:bg-green-600 opacity-50 cursor-not-allowed"><Save /></button> : <button onClick={() => startEditing(goal)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2"><Save /></button>}
+                                        <ToolTip text="Delete">
+                                            {deleting ? <button className="bg-highlight opacity-50 cursor-not-allowed"><X /></button> : <button onClick={() => goal._id && handleDelete(goal._id)} className="bg-accent hover:bg-highlight cursor-pointer text-white rounded p-2"><X /></button>}
+                                        </ToolTip>
+                                        <ToolTip text="Edit">
+                                            {editing ? <button className="bg-highlight opacity-50 cursor-not-allowed"><Save /></button> : <button onClick={() => startEditing(goal)} className="bg-accent hover:bg-highlight cursor-pointer text-white rounded p-2"><Save /></button>}
+                                        </ToolTip>
                                     </div>
                                 </div>
                             )
                         })}
                     </div> : <div className="text-3xl">No goals entered yet</div>}
                 </section>
-                <section className="w-full lg:w-1/2 flex justify-center">
-                    <div className="flex flex-col items-center justify-center w-full lg:w-[75%] p-1 rounded border h-[84vh] overflow-y-auto bg-card">
+                <section className="w-full lg:w-1/2 flex justify-center flex-1 overflow-y-auto">
+                    <div className="flex flex-col items-center justify-center w-full lg:w-[75%] p-1 rounded border-borderPrimary bg-card">
                         <div className="text-2xl underline">Fill the Goals here!</div>
                         <form className="rounded p-2" onSubmit={handleSubmit}>
                             <div className="p-3">
                                 <label
                                     htmlFor="title"
-                                    className="mr-12"
+                                    className="mr-12 text-textSecondary"
                                 >
                                     Title:
                                 </label>
@@ -411,7 +418,7 @@ export default function Goals() {
                             <div className="p-3">
                                 <label
                                     htmlFor="description"
-                                    className="mr-12"
+                                    className="mr-12 text-textSecondary"
                                 >
                                     Description
                                 </label>
@@ -427,7 +434,7 @@ export default function Goals() {
                             <div className="p-3">
                                 <label
                                     htmlFor="dueDate"
-                                    className="mr-12"
+                                    className="mr-12 text-textSecondary"
                                 >
                                     Due Date
                                 </label>
@@ -448,7 +455,7 @@ export default function Goals() {
                                 />
                             </div>
                             <div className="p-3">
-                                <label htmlFor="category" className="mr-5">Category</label>
+                                <label htmlFor="category" className="mr-5 text-textSecondary">Category</label>
                                 <select
                                     name="category"
                                     id="category"
@@ -465,10 +472,9 @@ export default function Goals() {
                                 </select>
                             </div>
                             <div className="p-3">
-                                <label className="mr-5 font-medium">Progress (%)</label>
+                                <label className="mr-5 font-medium text-textSecondary">Progress (%)</label>
                                 <input
                                     type="number"
-
                                     max="100"
                                     name="progress"
                                     value={formData.progress}
@@ -479,7 +485,7 @@ export default function Goals() {
                                 />
                             </div>
                             <div className="p-3">
-                                <label htmlFor="status" className="mr-5">Status</label>
+                                <label htmlFor="status" className="mr-5 text-textSecondary">Status</label>
                                 <select
                                     name="status"
                                     id="status"
@@ -495,12 +501,12 @@ export default function Goals() {
                                 </select>
                             </div>
                             <div className="p-3">
-                                <p className="font-medium mb-2">Create Milestone</p>
+                                <p className="font-medium mb-2 text-textSecondary">Create Milestone</p>
 
                                 {formData.milestones?.map((milestone, index) => (
-                                    <div key={index} className="border p-3 rounded space-y-3">
+                                    <div key={index} className="border-borderPrimary p-3 rounded space-y-3">
                                         <div>
-                                            <label className="mr-3">Title</label>
+                                            <label className="mr-3 text-textSecondary">Title</label>
                                             <input
                                                 type="text"
                                                 value={milestone.title}
@@ -514,7 +520,7 @@ export default function Goals() {
                                             />
                                         </div>
                                         <div className="flex gap-4 items-center">
-                                            <label>Completed?</label>
+                                            <label className="text-textSecondary">Completed?</label>
                                             <label className="flex items-center gap-1">
                                                 <input
                                                     type="radio"
@@ -546,7 +552,7 @@ export default function Goals() {
                                             </label>
                                         </div>
                                         <div>
-                                            <label className="mr-3">Completed At</label>
+                                            <label className="mr-3 text-textSecondary">Completed At</label>
                                             <input
                                                 type="date"
                                                 value={
@@ -571,7 +577,9 @@ export default function Goals() {
                                 ))}
                             </div>
                             <div className="flex items-center justify-center mt-3">
-                                {loading ? <button className="bg-green-600 p-2 rounded cursor-not-allowed opacity-50">Creating Goal</button> : <button className="bg-red-600 p-2 rounded cursor-pointer hover:bg-green-600 transition-colors" type="submit"><Plus /></button>}
+                                <ToolTip text="Create Goal">
+                                    {loading ? <button className="bg-highlight p-2 rounded cursor-not-allowed opacity-50">Creating Goal</button> : <button className="bg-accent p-2 rounded cursor-pointer hover:bg-highlight transition-colors" type="submit"><Plus /></button>}
+                                </ToolTip>
                             </div>
                         </form>
                     </div>

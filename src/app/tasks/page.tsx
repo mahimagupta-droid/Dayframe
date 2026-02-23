@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import ToolTip from "@/components/tootTip";
 import { TasksTypes } from "@/lib/models/Tasks";
 import { Check, Plus, Trash, X } from "lucide-react";
 import Link from "next/link";
@@ -257,17 +258,21 @@ export default function Tasks() {
                             </select>
                         </div>
                         <div className="flex items-center justify-center gap-4">
-                            <button
-                                type="submit"
-                                className="bg-red-600 hover:bg-green-500 transition p-2 rounded">
-                                <Check />
-                            </button>
-                            <button
-                                type="button"
-                                className="bg-red-600 hover:bg-green-500 transition p-2 rounded"
-                                onClick={() => setEditing(false)}>
-                                <X />
-                            </button>
+                            <ToolTip text="Save">
+                                <button
+                                    type="submit"
+                                    className="bg-accent hover:bg-highlight transition p-2 rounded">
+                                    <Check />
+                                </button>
+                            </ToolTip>
+                            <ToolTip text="Cancel">
+                                <button
+                                    type="button"
+                                    className="bg-accent hover:bg-highlight transition p-2 rounded"
+                                    onClick={() => setEditing(false)}>
+                                    <X />
+                                </button>
+                            </ToolTip>
                         </div>
                     </form>
                 </div>
@@ -333,20 +338,24 @@ export default function Tasks() {
                                             </div>
                                         </div>
                                         <div className="flex flex-row gap-y-1 items-center justify-center gap-4 mt-2">
-                                            {deleting ? <button className="hover:bg-green-600 opacity-50 cursor-not-allowed"><Trash /></button> : <button onClick={() => task._id && handleDelete(task._id)} className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2"><Trash /></button>}
-                                            {editing ? (
-                                                <button className="opacity-50 cursor-not-allowed"><Check /></button>
-                                            ) : (
-                                                <button
-                                                    onClick={() => {
-                                                        setSubmitData(task);
-                                                        setEditing(true);
-                                                    }}
-                                                    className="bg-red-600 hover:bg-green-600 cursor-pointer text-white rounded p-2"
-                                                >
-                                                    <Check />
-                                                </button>
-                                            )}
+                                            <ToolTip text="Delete">
+                                                {deleting ? <button className="hover:bg-highlight opacity-50 cursor-not-allowed"><Trash /></button> : <button onClick={() => task._id && handleDelete(task._id)} className="bg-accent hover:bg-highlight cursor-pointer text-white rounded p-2"><Trash /></button>}
+                                            </ToolTip>
+                                            <ToolTip text="Edit">
+                                                {editing ? (
+                                                    <button className="opacity-50 cursor-not-allowed bg-highlight"><Check /></button>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => {
+                                                            setSubmitData(task);
+                                                            setEditing(true);
+                                                        }}
+                                                        className="bg-accent hover:bg-highlight cursor-pointer text-black rounded p-2"
+                                                    >
+                                                        <Check />
+                                                    </button>
+                                                )}
+                                            </ToolTip>
                                         </div>
                                     </div>
                                 ))
@@ -485,8 +494,10 @@ export default function Tasks() {
                                     <option value="completed">Completed</option>
                                 </select>
                             </div>
-                            {loading ? <button className="bg-red-700 cursor-not-allowed opacity-80 mx-auto block p-2">Adding Task...</button> : <button className="bg-red-600 hover:bg-green-600 transition p-2 rounded mx-auto block"
-                                type="submit"><Plus /></button>}
+                            <ToolTip text="Submit">
+                                {loading ? <button className="bg-highlight cursor-not-allowed opacity-80 mx-auto block p-2">Adding Task...</button> : <button className="bg-accent hover:bg-highlight transition p-2 rounded mx-auto block"
+                                    type="submit"><Plus /></button>}
+                            </ToolTip>
                         </form>
                     </div>
                 </section >
