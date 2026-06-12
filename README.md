@@ -63,23 +63,19 @@ MONGODB_ATLAS_URL=mongodb+srv://...
 npm run dev
 ```
 
----
-
-## Project Structure
+```
 src/
 ├── app/
-│   ├── api/          # REST API routes (user, tasks, goals)
-│   ├── dashboard/    # Analytics dashboard
-│   ├── tasks/        # Task CRUD interface
-│   ├── goals/        # Goal + milestone interface
-│   └── middleware.ts # Clerk route protection
-├── components/       # Reusable UI components
+│   ├── api/            # REST API routes (user, tasks, goals)
+│   ├── dashboard/      # Analytics dashboard
+│   ├── tasks/          # Task CRUD interface
+│   ├── goals/          # Goal + milestone interface
+│   └── middleware.ts   # Clerk route protection
+├── components/         # Reusable UI components
 └── lib/
-├── models/       # Mongoose schemas (User, Task, Goal)
-└── dbConnect.ts  # MongoDB connection
-
----
-
+    ├── models/         # Mongoose schemas (User, Task, Goal)
+    └── dbConnect.ts    # MongoDB connection
+```
 ## Data Models
 
 **Task** — title, description, deadline, priority (high/medium/low), 
